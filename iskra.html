@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ИСКРА — AI-менеджер</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ==========================================
+   RESET
+   ========================================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ==========================================
+   DARK BOTANICAL — THEME VARIABLES
+   Change :root vars to restyle the whole deck
+   ========================================== */
+:root {
+  --bg:       #0f0f0f;
+  --bg2:      #141414;
+  --bg3:      #1c1c1c;
+  --text:     #e8e4df;
+  --text-sec: #9a9590;
+  --text-mut: #4a4540;
+  --warm:     #d4a574;
+  --pink:     #e8b4b8;
+  --gold:     #c9b896;
+
+  --font-d: 'Cormorant', Georgia, serif;
+  --font-b: 'IBM Plex Sans', sans-serif;
+
+  /* Typography — clamp() mandatory */
+  --title-size:  clamp(2.2rem,  6vw,   5.5rem);
+  --h2-size:     clamp(1.4rem,  3.5vw, 3rem);
+  --h3-size:     clamp(1rem,    2.2vw, 2rem);
+  --body-size:   clamp(0.72rem, 1.3vw, 1rem);
+  --small-size:  clamp(0.6rem,  0.9vw, 0.75rem);
+  --label-size:  clamp(0.55rem, 0.75vw, 0.65rem);
+
+  /* Spacing */
+  --pad:      clamp(1.5rem, 4.5vw, 5rem);
+  --gap:      clamp(0.6rem,  1.8vw, 1.75rem);
+  --el-gap:   clamp(0.25rem, 0.8vw, 0.7rem);
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur:  0.7s;
+}
+
+/* ==========================================
+   VIEWPORT BASE — mandatory (from viewport-base.css)
+   ========================================== */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-b);
+}
+
+.slide-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 100%;
+  overflow: hidden;
+  padding: var(--pad);
+}
+
+/* Cards / containers */
+.card, .container, .content-box {
+  max-width: min(90vw, 1000px);
+  max-height: min(80vh, 700px);
+}
+
+/* Feature lists */
+.feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+.feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+/* Images */
+img, .image-container {
+  max-width: 100%;
+  max-height: min(50vh, 400px);
+  object-fit: contain;
+}
+
+/* Breakpoints */
+@media (max-height: 700px) {
+  :root {
+    --pad:        clamp(0.75rem, 3vw, 2rem);
+    --gap:        clamp(0.4rem, 1.5vw, 1rem);
+    --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+    --h2-size:    clamp(1rem, 3vw, 1.75rem);
+  }
+}
+@media (max-height: 600px) {
+  :root {
+    --pad:        clamp(0.5rem, 2.5vw, 1.5rem);
+    --gap:        clamp(0.3rem, 1vw, 0.75rem);
+    --title-size: clamp(1.1rem, 4vw, 2rem);
+    --body-size:  clamp(0.7rem, 1.2vw, 0.95rem);
+  }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+  :root {
+    --pad:        clamp(0.4rem, 2vw, 1rem);
+    --title-size: clamp(1rem, 3.5vw, 1.5rem);
+    --h2-size:    clamp(0.9rem, 2.5vw, 1.25rem);
+    --body-size:  clamp(0.65rem, 1vw, 0.85rem);
+  }
+}
+@media (max-width: 600px) {
+  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+  .grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.2s !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* ==========================================
+   SHARED DECORATIVE ELEMENTS
+   ========================================== */
+
+/* Atmospheric gradient blobs */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Thin vertical accent line */
+.vline {
+  position: absolute;
+  left: clamp(18px, 3vw, 40px);
+  top: 12%;
+  bottom: 12%;
+  width: 1px;
+  background: linear-gradient(to bottom,
+    transparent,
+    rgba(212,165,116,0.45) 30%,
+    rgba(201,184,150,0.35) 70%,
+    transparent
+  );
+  z-index: 1;
+}
+
+/* Slide meta bar (label top-left, number top-right) */
+.slide-meta {
+  position: absolute;
+  top: clamp(14px, 2.2vh, 28px);
+  left: var(--pad);
+  right: var(--pad);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+.slide-label {
+  font-size: var(--label-size);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--warm);
+  font-weight: 300;
+}
+.slide-num {
+  font-size: var(--label-size);
+  letter-spacing: 0.15em;
+  color: var(--text-mut);
+  font-weight: 300;
+}
+
+/* Ornamental divider */
+.orn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.orn::before, .orn::after {
+  content: '';
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.35;
+}
+.orn::before { width: clamp(24px, 4vw, 50px); }
+.orn::after  { width: clamp(12px, 2vw, 24px); }
+.orn-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--warm);
+  opacity: 0.7;
+}
+
+/* ==========================================
+   REVEAL ANIMATIONS
+   Triggered by .visible class (added via JS IntersectionObserver)
+   ========================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+
+/* Stagger delays */
+.reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal:nth-child(2) { transition-delay: 0.18s; }
+.reveal:nth-child(3) { transition-delay: 0.30s; }
+.reveal:nth-child(4) { transition-delay: 0.42s; }
+.reveal:nth-child(5) { transition-delay: 0.54s; }
+.reveal:nth-child(6) { transition-delay: 0.64s; }
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-28px);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.slide.visible .reveal-left { opacity: 1; transform: translateX(0); }
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+.slide.visible .reveal-scale { opacity: 1; transform: scale(1); }
+
+/* ==========================================
+   PROGRESS BAR
+   ========================================== */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(to right, var(--warm), var(--pink));
+  z-index: 2000;
+  transition: width 0.25s ease;
+  pointer-events: none;
+}
+
+/* ==========================================
+   NAV DOTS
+   ========================================== */
+#nav-dots {
+  position: fixed;
+  right: clamp(8px, 1.5vw, 18px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  z-index: 1500;
+}
+.ndot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--text-mut);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+.ndot.active {
+  background: var(--warm);
+  transform: scale(1.5);
+}
+
+/* ==========================================
+   INLINE EDITING
+   Hotzone top-left 80×80px, button E, Ctrl+S
+   ========================================== */
+#edit-hotzone {
+  position: fixed;
+  top: 0; left: 0;
+  width: 80px; height: 80px;
+  z-index: 9000;
+  cursor: pointer;
+}
+#edit-toggle {
+  position: fixed;
+  top: 14px; left: 14px;
+  width: 30px; height: 30px;
+  background: var(--bg3);
+  border: 1px solid var(--warm);
+  border-radius: 5px;
+  color: var(--warm);
+  font-size: 13px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 9001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#edit-toggle.show, #edit-toggle.active {
+  opacity: 1; pointer-events: auto;
+}
+#edit-toggle.active { background: var(--warm); color: var(--bg); }
+
+[contenteditable="true"] {
+  outline: 1px dashed rgba(212,165,116,0.45);
+  border-radius: 3px;
+  cursor: text;
+  min-width: 1em;
+}
+
+/* ==========================================
+   SLIDE 2 — 4 STEPS
+   ========================================== */
+.s-steps .slide-content { justify-content: center; }
+
+.steps-title {
+  font-family: var(--font-d);
+  font-size: var(--h2-size);
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: var(--gap);
+}
+.steps-title em { font-style: italic; color: var(--warm); }
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.6rem, 1.3vw, 1.2rem);
+}
+@media (max-width: 700px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.step-card {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(201,184,150,0.1);
+  border-radius: 4px;
+  padding: clamp(0.8rem, 1.5vw, 1.4rem);
+  position: relative;
+  overflow: hidden;
+}
+.step-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--warm), transparent);
+}
+.step-n {
+  font-family: var(--font-d);
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  font-weight: 300;
+  color: rgba(212,165,116,0.22);
+  line-height: 1;
+  margin-bottom: var(--el-gap);
+}
+.step-title {
+  font-size: var(--body-size);
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: calc(var(--el-gap) * 0.7);
+}
+.step-time {
+  font-size: var(--small-size);
+  color: var(--warm);
+  font-weight: 300;
+  letter-spacing: 0.1em;
+}
+.steps-total {
+  margin-top: var(--gap);
+  text-align: right;
+  font-family: var(--font-d);
+  font-size: clamp(0.9rem, 2vw, 1.6rem);
+  font-style: italic;
+  color: var(--gold);
+  font-weight: 300;
+}
+
+/* ==========================================
+   SLIDE 3 — DNA COMPARISON
+   ========================================== */
+.s-dna .slide-content { justify-content: flex-start; padding-top: clamp(3.5rem, 7vh, 6rem); }
+
+.dna-title {
+  font-family: var(--font-d);
+  font-size: var(--h2-size);
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: var(--gap);
+}
+.dna-title em { font-style: italic; color: var(--warm); }
+
+.comp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(0.8rem, 1.8vw, 1.8rem);
+  flex: 1;
+  max-height: calc(100vh - 10rem);
+  overflow: hidden;
+}
+.comp-col {
+  border-radius: 4px;
+  padding: clamp(0.8rem, 1.5vw, 1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--el-gap);
+  overflow: hidden;
+}
+.comp-col.bad {
+  background: rgba(255,255,255,0.018);
+  border: 1px solid rgba(255,255,255,0.05);
+  opacity: 0.5;
+}
+.comp-col.good {
+  background: rgba(212,165,116,0.06);
+  border: 1px solid rgba(212,165,116,0.18);
+}
+.comp-head {
+  font-size: var(--small-size);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding-bottom: var(--el-gap);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: calc(var(--el-gap) * 0.5);
+}
+.comp-col.bad  .comp-head { color: var(--text-mut); }
+.comp-col.good .comp-head { color: var(--warm); border-bottom-color: rgba(212,165,116,0.18); }
+.comp-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: var(--body-size);
+  font-weight: 300;
+  line-height: 1.5;
+}
+.comp-col.bad  .comp-item { color: var(--text-sec); }
+.comp-col.good .comp-item { color: var(--text); }
+.ci-icon { flex-shrink: 0; opacity: 0.75; }
+
+/* ==========================================
+   SLIDE 4 — AI MANAGER / QUOTE
+   ========================================== */
+.s-ai { align-items: center; justify-content: center; text-align: center; }
+
+.s-ai .blob-ai-1 {
+  width: clamp(200px, 38vw, 460px);
+  height: clamp(200px, 38vw, 460px);
+  background: radial-gradient(circle, rgba(232,180,184,0.08) 0%, transparent 65%);
+  top: -10%; right: -6%;
+}
+.s-ai .blob-ai-2 {
+  width: clamp(150px, 28vw, 340px);
+  height: clamp(150px, 28vw, 340px);
+  background: radial-gradient(circle, rgba(212,165,116,0.07) 0%, transparent 65%);
+  bottom: -5%; left: -4%;
+}
+
+.ai-wrap {
+  position: relative;
+  z-index: 2;
+  max-width: min(78vw, 760px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap);
+}
+.ai-eyebrow {
+  font-size: var(--label-size);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--warm);
+  font-weight: 300;
+}
+.ai-bad {
+  font-family: var(--font-d);
+  font-size: clamp(0.9rem, 2vw, 1.6rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-sec);
+  text-decoration: line-through;
+  text-decoration-color: rgba(180,60,40,0.5);
+  text-decoration-thickness: 1.5px;
+}
+.ai-good {
+  font-family: var(--font-d);
+  font-size: clamp(1.4rem, 3.2vw, 2.8rem);
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.25;
+}
+.ai-good em { font-style: italic; color: var(--warm); }
+.ai-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.ai-tag {
+  padding: 4px 13px;
+  border: 1px solid rgba(201,184,150,0.2);
+  border-radius: 20px;
+  font-size: var(--small-size);
+  color: var(--gold);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+}
+
+/* ==========================================
+   SLIDE 5 — UNIFIED INBOX
+   ========================================== */
+.s-inbox { align-items: center; justify-content: center; }
+
+.inbox-cap {
+  position: absolute;
+  top: clamp(36px, 6vh, 52px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-d);
+  font-size: clamp(0.85rem, 1.6vw, 1.3rem);
+  font-weight: 400;
+  color: var(--text-sec);
+  white-space: nowrap;
+  z-index: 10;
+  letter-spacing: 0.02em;
+}
+.inbox-cap em { font-style: italic; color: var(--warm); }
+
+.inbox-app {
+  position: relative;
+  z-index: 2;
+  width: min(90vw, 940px);
+  height: min(68vh, 490px);
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,165,116,0.1);
+  margin-top: clamp(2.5rem, 5.5vh, 4.5rem);
+}
+
+.app-bar {
+  height: 30px;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+.app-dot { width: 10px; height: 10px; border-radius: 50%; }
+.app-dot:nth-child(1) { background: #ff5f57; }
+.app-dot:nth-child(2) { background: #febc2e; }
+.app-dot:nth-child(3) { background: #28c840; }
+.app-bar-name {
+  margin-left: auto;
+  font-size: 10px;
+  color: rgba(255,255,255,0.18);
+  font-family: var(--font-b);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.app-tabs {
+  display: flex;
+  background: #0d0d0d;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 0 8px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.app-tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 10px;
+  font-size: 10px;
+  font-family: var(--font-b);
+  color: rgba(255,255,255,0.3);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  cursor: default;
+}
+.app-tab.on { color: rgba(255,255,255,0.88); border-bottom-color: var(--warm); }
+.tab-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+.app-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  overflow: hidden;
+}
+
+.cl-list {
+  border-right: 1px solid rgba(255,255,255,0.05);
+  background: #0d0d0d;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.cl-list-hdr {
+  padding: 7px 11px;
+  font-size: 9px;
+  font-family: var(--font-b);
+  color: rgba(255,255,255,0.18);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  flex-shrink: 0;
+}
+.cl-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  flex-shrink: 0;
+}
+.cl-item.on { background: rgba(212,165,116,0.07); }
+.cl-av {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  font-family: var(--font-b);
+}
+.cl-info { flex: 1; min-width: 0; }
+.cl-name {
+  font-size: 10.5px; font-family: var(--font-b); font-weight: 500;
+  color: rgba(255,255,255,0.82);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cl-prev {
+  font-size: 9px; font-family: var(--font-b);
+  color: rgba(255,255,255,0.25);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px;
+}
+.cl-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+.ch-badge {
+  font-size: 7.5px; font-family: var(--font-b); font-weight: 600;
+  padding: 1.5px 5px; border-radius: 3px; color: #000; letter-spacing: 0.04em;
+}
+.cl-time { font-size: 8px; color: rgba(255,255,255,0.18); font-family: var(--font-b); }
+
+.chat-panel { display: flex; flex-direction: column; overflow: hidden; }
+.chat-hdr {
+  padding: 7px 13px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0; background: #0d0d0d;
+}
+.chat-hdr-av {
+  width: 26px; height: 26px; border-radius: 50%; background: #2aabee;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: #fff; font-family: var(--font-b); font-weight: 500;
+}
+.chat-hdr-name { font-size: 10.5px; font-family: var(--font-b); font-weight: 500; color: rgba(255,255,255,0.82); }
+.chat-hdr-ch   { font-size: 8.5px; color: var(--warm); font-family: var(--font-b); margin-left: auto; }
+
+.chat-msgs {
+  flex: 1; padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 7px;
+  overflow-y: auto; background: #0f0f0f;
+}
+.cmsg {
+  max-width: 74%; padding: 7px 10px; border-radius: 10px;
+  font-size: 10.5px; font-family: var(--font-b); line-height: 1.5;
+}
+.cmsg.u {
+  align-self: flex-end;
+  background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.78);
+  border-bottom-right-radius: 3px;
+}
+.cmsg.b {
+  align-self: flex-start;
+  background: rgba(212,165,116,0.13); color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(212,165,116,0.13); border-bottom-left-radius: 3px;
+}
+.cmsg.typing {
+  align-self: flex-start;
+  background: rgba(212,165,116,0.08); padding: 9px 14px;
+  border-bottom-left-radius: 3px;
+}
+.cmsg.typing span {
+  display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--warm); animation: tp 1.2s ease-in-out infinite;
+  margin: 0 1.5px; vertical-align: middle;
+}
+.cmsg.typing span:nth-child(2) { animation-delay: 0.2s; }
+.cmsg.typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes tp {
+  0%,80%,100% { opacity: 0.25; transform: scale(0.75); }
+  40%         { opacity: 1;    transform: scale(1.2); }
+}
+
+.chat-bottom {
+  padding: 7px 12px; border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex; gap: 6px; align-items: center;
+  background: #0d0d0d; flex-shrink: 0;
+}
+.chat-ibox {
+  flex: 1; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07); border-radius: 14px;
+  padding: 5px 12px; font-size: 10px;
+  color: rgba(255,255,255,0.28); font-family: var(--font-b); pointer-events: none;
+}
+.chat-send {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--warm); border: none; cursor: default;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--bg);
+}
+
+/* Edit status badge */
+#edit-status {
+  position: fixed;
+  bottom: 14px; left: 14px;
+  font-size: 10px;
+  font-family: var(--font-b);
+  font-weight: 300;
+  color: var(--warm);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0;
+  z-index: 9001;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+#edit-status.show { opacity: 1; }
+
+/* ==========================================
+   SLIDE 1 — TITLE / HOOK
+   1 heading + 1 subtitle + tagline (title slide limits)
+   ========================================== */
+.s-title {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Large warm blob top-right */
+.s-title .b1 {
+  width: clamp(280px, 52vw, 640px);
+  height: clamp(280px, 52vw, 640px);
+  background: radial-gradient(circle, rgba(212,165,116,0.13) 0%, transparent 65%);
+  top: -18%;
+  right: -8%;
+}
+/* Pink blob bottom-left */
+.s-title .b2 {
+  width: clamp(200px, 38vw, 480px);
+  height: clamp(200px, 38vw, 480px);
+  background: radial-gradient(circle, rgba(232,180,184,0.09) 0%, transparent 65%);
+  bottom: -5%;
+  left: -6%;
+}
+/* Gold micro blob center */
+.s-title .b3 {
+  width: clamp(80px, 18vw, 220px);
+  height: clamp(80px, 18vw, 220px);
+  background: radial-gradient(circle, rgba(201,184,150,0.07) 0%, transparent 65%);
+  top: 42%;
+  left: 28%;
+}
+
+.title-wrap {
+  position: relative;
+  z-index: 2;
+  max-width: min(82vw, 880px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--el-gap);
+}
+
+/* "ИСКРА" — large display */
+.brand {
+  font-family: var(--font-d);
+  font-size: clamp(5rem, 15vw, 13rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 0.88;
+  display: block;
+}
+.brand em {
+  font-style: italic;
+  color: var(--warm);
+}
+
+/* Hook line */
+.hook {
+  font-family: var(--font-d);
+  font-size: clamp(1rem, 2.5vw, 2rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-sec);
+  line-height: 1.5;
+  max-width: 600px;
+  margin-top: clamp(0.5rem, 1.2vh, 1.2rem);
+}
+.hook strong {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* Subtitle / tagline */
+.subtitle {
+  font-size: var(--small-size);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-mut);
+  margin-top: clamp(0.75rem, 1.8vh, 1.8rem);
+}
+
+/* Divider ornament between brand and hook */
+.title-orn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: clamp(0.6rem, 1.4vh, 1.4rem) 0;
+}
+.title-orn-line {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold));
+  opacity: 0.4;
+}
+.title-orn-line:last-child {
+  background: linear-gradient(to left, transparent, var(--gold));
+}
+.title-orn-line { width: clamp(30px, 5vw, 60px); }
+.title-orn-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--warm);
+  opacity: 0.7;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progress-bar"></div>
+
+<!-- Nav dots -->
+<nav id="nav-dots"></nav>
+
+<!-- Inline editing controls -->
+<div id="edit-hotzone"></div>
+<button id="edit-toggle" title="Режим редактирования (E)">✏</button>
+<div id="edit-status">● Редактирование</div>
+
+<!-- ==========================================
+     SLIDE 1 — TITLE / HOOK
+     ========================================== -->
+<section class="slide s-title" id="s1">
+  <!-- Atmospheric blobs -->
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+
+  <!-- Slide meta -->
+  <div class="slide-meta">
+    <span class="slide-label">ИСКРА · AI-менеджер</span>
+    <span class="slide-num">01 / 12</span>
+  </div>
+
+  <!-- Main content -->
+  <div class="title-wrap">
+    <span class="brand reveal">ИС<em>КРА</em></span>
+
+    <div class="title-orn reveal">
+      <span class="title-orn-line"></span>
+      <span class="title-orn-dot"></span>
+      <span class="title-orn-line"></span>
+    </div>
+
+    <p class="hook reveal">
+      Ваши клиенты пишут <strong>прямо сейчас.</strong><br>
+      Им никто не отвечает.
+    </p>
+
+    <p class="subtitle reveal">AI-менеджер для малого бизнеса</p>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 2 — 4 ШАГА / EASY TO USE
+     ========================================== -->
+<section class="slide s-steps" id="s2">
+  <div class="blob" style="width:clamp(220px,38vw,460px);height:clamp(220px,38vw,460px);background:radial-gradient(circle,rgba(212,165,116,0.09) 0%,transparent 65%);top:-12%;right:-4%;"></div>
+  <div class="vline"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Простой старт</span>
+    <span class="slide-num">02 / 12</span>
+  </div>
+  <div class="slide-content">
+    <h2 class="steps-title reveal">10 минут — <em>и бот работает</em></h2>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-n">01</div>
+        <div class="step-title">Регистрация</div>
+        <div class="step-time">1 минута</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-n">02</div>
+        <div class="step-title">Загрузил прайс</div>
+        <div class="step-time">2 минуты</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-n">03</div>
+        <div class="step-title">Подключил канал</div>
+        <div class="step-time">3 минуты</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-n">04</div>
+        <div class="step-title">Бот работает</div>
+        <div class="step-time">уже сейчас</div>
+      </div>
+    </div>
+    <p class="steps-total reveal">Без программиста. Без недель настройки.</p>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 3 — ДНК БИЗНЕСА / COMPARISON
+     ========================================== -->
+<section class="slide s-dna" id="s3">
+  <div class="blob" style="width:clamp(200px,35vw,420px);height:clamp(200px,35vw,420px);background:radial-gradient(circle,rgba(201,184,150,0.07) 0%,transparent 65%);bottom:-8%;right:-4%;"></div>
+  <div class="vline"></div>
+  <div class="slide-meta">
+    <span class="slide-label">ДНК бизнеса</span>
+    <span class="slide-num">03 / 12</span>
+  </div>
+  <div class="slide-content">
+    <h2 class="dna-title reveal">Скинул прайс — <em>бот сразу знает всё</em></h2>
+    <div class="comp-grid">
+      <div class="comp-col bad reveal-left" style="transition-delay:0.1s">
+        <div class="comp-head">Обычный бот</div>
+        <div class="comp-item"><span class="ci-icon">✕</span>Кнопки и заскриптованные ответы</div>
+        <div class="comp-item"><span class="ci-icon">✕</span>Не знает ваш прайс</div>
+        <div class="comp-item"><span class="ci-icon">✕</span>Настройка — неделями</div>
+        <div class="comp-item"><span class="ci-icon">✕</span>Нужен программист</div>
+        <div class="comp-item"><span class="ci-icon">✕</span>Клиент чувствует робота</div>
+      </div>
+      <div class="comp-col good reveal" style="transition-delay:0.25s">
+        <div class="comp-head">ИСКРА</div>
+        <div class="comp-item"><span class="ci-icon" style="color:var(--warm)">✓</span>Живой диалог, понимает контекст</div>
+        <div class="comp-item"><span class="ci-icon" style="color:var(--warm)">✓</span>Знает цены с первой минуты</div>
+        <div class="comp-item"><span class="ci-icon" style="color:var(--warm)">✓</span>Готов за 10 минут</div>
+        <div class="comp-item"><span class="ci-icon" style="color:var(--warm)">✓</span>Без программиста</div>
+        <div class="comp-item"><span class="ci-icon" style="color:var(--warm)">✓</span>Не отличают от человека</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 4 — AI-МЕНЕДЖЕР / ДИАЛОГ
+     ========================================== -->
+<section class="slide s-ai" id="s4">
+  <div class="blob blob-ai-1"></div>
+  <div class="blob blob-ai-2"></div>
+  <div class="slide-meta">
+    <span class="slide-label">AI-менеджер</span>
+    <span class="slide-num">04 / 12</span>
+  </div>
+  <div class="ai-wrap">
+    <span class="ai-eyebrow reveal">Не кнопки — настоящий диалог</span>
+    <p class="ai-bad reveal">«Я вас не понял. Выберите пункт меню.»</p>
+    <div class="orn reveal"><span class="orn-dot"></span></div>
+    <p class="ai-good reveal">«<em>Записать вас</em><br>на субботу?»</p>
+    <div class="ai-tags reveal">
+      <span class="ai-tag">Консультирует</span>
+      <span class="ai-tag">Работает с возражениями</span>
+      <span class="ai-tag">Подводит к записи</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 5 — ЕДИНЫЙ INBOX (ГЛАВНЫЙ)
+     ========================================== -->
+<section class="slide s-inbox" id="s5">
+  <div class="blob" style="width:clamp(180px,30vw,360px);height:clamp(180px,30vw,360px);background:radial-gradient(circle,rgba(212,165,116,0.07) 0%,transparent 65%);top:-6%;right:-3%;"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Единый inbox</span>
+    <span class="slide-num">05 / 12</span>
+  </div>
+  <p class="inbox-cap reveal">Все каналы в <em>одном окне</em></p>
+
+  <!-- CSS-мокап интерфейса -->
+  <div class="inbox-app reveal-scale">
+
+    <!-- macOS title bar -->
+    <div class="app-bar">
+      <div class="app-dot"></div>
+      <div class="app-dot"></div>
+      <div class="app-dot"></div>
+      <span class="app-bar-name">ИСКРА · Inbox</span>
+    </div>
+
+    <!-- Channel tabs -->
+    <div class="app-tabs">
+      <div class="app-tab on">
+        <span class="tab-dot" style="background:#2aabee"></span>Все
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#2aabee"></span>Telegram
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#25d366"></span>WhatsApp
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#f50000"></span>Авито
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#0077ff"></span>ВКонтакте
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#e1306c"></span>Instagram
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#9b59b6"></span>MAX
+      </div>
+    </div>
+
+    <!-- Body: list + chat -->
+    <div class="app-body">
+
+      <!-- Client list -->
+      <div class="cl-list">
+        <div class="cl-list-hdr">Диалоги · 6</div>
+
+        <div class="cl-item on">
+          <div class="cl-av" style="background:#2a3a4a">АК</div>
+          <div class="cl-info">
+            <div class="cl-name">Анна К.</div>
+            <div class="cl-prev">Сколько стоит маникюр?</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#2aabee">TG</span>
+            <span class="cl-time">14:32</span>
+          </div>
+        </div>
+
+        <div class="cl-item">
+          <div class="cl-av" style="background:#1a3a2a">МС</div>
+          <div class="cl-info">
+            <div class="cl-name">Михаил С.</div>
+            <div class="cl-prev">Это дорого...</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#f50000">AV</span>
+            <span class="cl-time">14:28</span>
+          </div>
+        </div>
+
+        <div class="cl-item">
+          <div class="cl-av" style="background:#1a2a1a">ОП</div>
+          <div class="cl-info">
+            <div class="cl-name">Ольга П.</div>
+            <div class="cl-prev">Записал вас на пятницу 🎉</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#25d366">WA</span>
+            <span class="cl-time">14:21</span>
+          </div>
+        </div>
+
+        <div class="cl-item">
+          <div class="cl-av" style="background:#1a2a3a">ДВ</div>
+          <div class="cl-info">
+            <div class="cl-name">Дмитрий В.</div>
+            <div class="cl-prev">Есть в воскресенье?</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#0077ff">VK</span>
+            <span class="cl-time">14:15</span>
+          </div>
+        </div>
+
+        <div class="cl-item">
+          <div class="cl-av" style="background:#2a1a2a">ЕН</div>
+          <div class="cl-info">
+            <div class="cl-name">Елена Н.</div>
+            <div class="cl-prev">Есть скидки?</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#e1306c;color:#fff">IG</span>
+            <span class="cl-time">14:08</span>
+          </div>
+        </div>
+
+        <div class="cl-item">
+          <div class="cl-av" style="background:#2a1a3a">ИК</div>
+          <div class="cl-info">
+            <div class="cl-name">Игорь К.</div>
+            <div class="cl-prev">Привет, нужна консультация</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#9b59b6;color:#fff">MX</span>
+            <span class="cl-time">13:55</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat panel -->
+      <div class="chat-panel">
+        <div class="chat-hdr">
+          <div class="chat-hdr-av">АК</div>
+          <div>
+            <div class="chat-hdr-name">Анна К.</div>
+          </div>
+          <span class="chat-hdr-ch">via Telegram</span>
+        </div>
+
+        <div class="chat-msgs">
+          <div class="cmsg u">Добрый день! Сколько стоит маникюр с покрытием?</div>
+          <div class="cmsg b">Добрый день, Анна! Маникюр с гель-лаком — 1 800 ₽, с дизайном от 2 200 ₽. Хотите записаться?</div>
+          <div class="cmsg u">Да, хочу в эту субботу</div>
+          <div class="cmsg b">В субботу есть 11:00 и 15:30. Какое время удобнее? 😊</div>
+          <div class="cmsg typing"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="chat-bottom">
+          <div class="chat-ibox">Бот отвечает автоматически...</div>
+          <div class="chat-send">↑</div>
+        </div>
+      </div>
+
+    </div><!-- /app-body -->
+  </div><!-- /inbox-app -->
+</section>
+
+<script>
+/* ==========================================
+   SLIDE PRESENTATION CONTROLLER
+   Keyboard, touch, scroll-snap, progress, dots
+   ========================================== */
+class SlidePresentation {
+  constructor() {
+    this.slides   = Array.from(document.querySelectorAll('.slide'));
+    this.total    = this.slides.length;
+    this.current  = 0;
+    this.bar      = document.getElementById('progress-bar');
+    this.dotsNav  = document.getElementById('nav-dots');
+
+    this.buildDots();
+    this.setupObserver();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.setupScroll();
+  }
+
+  /* Build one dot per slide */
+  buildDots() {
+    this.slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'ndot' + (i === 0 ? ' active' : '');
+      d.title = `Слайд ${i + 1}`;
+      d.addEventListener('click', () => this.goTo(i));
+      this.dotsNav.appendChild(d);
+    });
+    this.dots = Array.from(this.dotsNav.querySelectorAll('.ndot'));
+  }
+
+  /* IntersectionObserver — adds .visible for CSS animations */
+  setupObserver() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          const i = this.slides.indexOf(e.target);
+          if (i !== -1) this.setCurrent(i);
+        }
+      });
+    }, { threshold: 0.5 });
+    this.slides.forEach(s => obs.observe(s));
+  }
+
+  setCurrent(i) {
+    this.current = i;
+    /* Progress bar */
+    this.bar.style.width = ((i + 1) / this.total * 100) + '%';
+    /* Nav dots */
+    this.dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+  }
+
+  goTo(i) {
+    i = Math.max(0, Math.min(this.total - 1, i));
+    this.slides[i].scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /* Keyboard: arrows, space, page keys */
+  setupKeyboard() {
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('edit-toggle').classList.contains('active')) return;
+      const map = {
+        ArrowDown: 1, ArrowRight: 1, ' ': 1, PageDown: 1,
+        ArrowUp: -1, ArrowLeft: -1, PageUp: -1
+      };
+      if (e.key in map) {
+        e.preventDefault();
+        this.goTo(this.current + map[e.key]);
+      }
+    });
+  }
+
+  /* Touch / swipe */
+  setupTouch() {
+    let startY = 0;
+    document.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', e => {
+      const dy = startY - e.changedTouches[0].clientY;
+      if (Math.abs(dy) > 50) this.goTo(this.current + (dy > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+
+  /* Mouse wheel (throttled) */
+  setupWheel() {
+    let t = 0;
+    document.addEventListener('wheel', e => {
+      const now = Date.now();
+      if (now - t < 800) return;
+      t = now;
+      this.goTo(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+
+  /* Scroll sync (for manual scroll) */
+  setupScroll() {
+    let t;
+    window.addEventListener('scroll', () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        const idx = Math.round(window.scrollY / window.innerHeight);
+        this.setCurrent(Math.min(idx, this.total - 1));
+      }, 50);
+    }, { passive: true });
+  }
+}
+
+/* ==========================================
+   INLINE EDITOR
+   Hotzone hover → show button, E key, Ctrl+S
+   ========================================== */
+class InlineEditor {
+  constructor() {
+    this.active    = false;
+    this.toggle    = document.getElementById('edit-toggle');
+    this.hotzone   = document.getElementById('edit-hotzone');
+    this.status    = document.getElementById('edit-status');
+    this.hideTimer = null;
+
+    this.bindHotzone();
+    this.bindKeyboard();
+    this.loadSaved();
+  }
+
+  bindHotzone() {
+    const { toggle, hotzone } = this;
+
+    hotzone.addEventListener('mouseenter', () => {
+      clearTimeout(this.hideTimer);
+      toggle.classList.add('show');
+    });
+    hotzone.addEventListener('mouseleave', () => {
+      this.hideTimer = setTimeout(() => {
+        if (!this.active) toggle.classList.remove('show');
+      }, 400);
+    });
+    toggle.addEventListener('mouseenter', () => clearTimeout(this.hideTimer));
+    toggle.addEventListener('mouseleave', () => {
+      this.hideTimer = setTimeout(() => {
+        if (!this.active) toggle.classList.remove('show');
+      }, 400);
+    });
+
+    hotzone.addEventListener('click', () => this.toggleEdit());
+    toggle.addEventListener('click', () => this.toggleEdit());
+  }
+
+  bindKeyboard() {
+    document.addEventListener('keydown', e => {
+      /* E — toggle edit mode (skip if typing in contenteditable) */
+      if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable')) {
+        this.toggleEdit();
+      }
+      /* Ctrl+S — save */
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        this.save();
+      }
+    });
+  }
+
+  toggleEdit() {
+    this.active = !this.active;
+    this.toggle.classList.toggle('active', this.active);
+    this.toggle.classList.add('show');
+    this.status.classList.toggle('show', this.active);
+
+    /* Make all text nodes editable / non-editable */
+    document.querySelectorAll(
+      '.slide h1, .slide h2, .slide h3, .slide p, .slide li, .slide span:not(.blob):not(.ndot):not(.title-orn-line):not(.title-orn-dot):not(.orn-dot)'
+    ).forEach(el => {
+      if (this.active) el.setAttribute('contenteditable', 'true');
+      else             el.removeAttribute('contenteditable');
+    });
+
+    if (!this.active) this.save();
+  }
+
+  save() {
+    /* Save current HTML to localStorage */
+    const key = 'iskra_presentation_v1';
+    const content = {};
+    document.querySelectorAll('[contenteditable]').forEach((el, i) => {
+      content[i] = el.innerHTML;
+    });
+    localStorage.setItem(key + '_content', JSON.stringify(content));
+
+    /* Export: download modified HTML */
+    const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = 'iskra.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  loadSaved() {
+    /* Restore from localStorage if available */
+    try {
+      const saved = JSON.parse(localStorage.getItem('iskra_presentation_v1_content'));
+      if (!saved) return;
+      const els = document.querySelectorAll(
+        '.slide h1, .slide h2, .slide h3, .slide p, .slide li, .slide span:not(.blob):not(.ndot):not(.title-orn-line):not(.title-orn-dot):not(.orn-dot)'
+      );
+      Object.entries(saved).forEach(([i, html]) => {
+        if (els[i]) els[i].innerHTML = html;
+      });
+    } catch (_) {}
+  }
+}
+
+/* ==========================================
+   INIT
+   ========================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  new SlidePresentation();
+  new InlineEditor();
+});
+</script>
+</body>
+</html>
