@@ -738,6 +738,312 @@ img, .image-container {
   font-size: 10px; color: var(--bg);
 }
 
+/* ==========================================
+   SLIDE 6 — ТРИ ДИАЛОГА
+   ========================================== */
+.s-3dial .slide-content { justify-content: flex-start; padding-top: clamp(3.5rem,7vh,6rem); }
+.s-3dial .sec-title { font-family:var(--font-d); font-size:var(--h2-size); font-weight:500; color:var(--text); margin-bottom:var(--gap); }
+.s-3dial .sec-title em { font-style:italic; color:var(--warm); }
+
+.three-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: clamp(0.6rem,1.3vw,1.2rem);
+  flex: 1;
+  max-height: calc(100vh - 9rem);
+  overflow: hidden;
+}
+.dial-card {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.dial-hdr {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 11px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+.d-badge {
+  font-size: 8px; font-family:var(--font-b); font-weight:600;
+  padding: 2px 6px; border-radius: 3px; color:#000; letter-spacing:0.04em;
+}
+.dial-cap { font-size:var(--small-size); color:var(--text-sec); font-weight:300; }
+.dial-body {
+  flex: 1; padding: 9px 11px;
+  display: flex; flex-direction: column; gap: 6px; overflow: hidden;
+}
+.dm { font-size:10px; font-family:var(--font-b); padding:6px 8px; border-radius:8px; line-height:1.45; max-width:88%; }
+.dm.u { align-self:flex-end; background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.72); border-bottom-right-radius:2px; }
+.dm.b { align-self:flex-start; background:rgba(212,165,116,0.12); color:rgba(255,255,255,0.82); border:1px solid rgba(212,165,116,0.12); border-bottom-left-radius:2px; }
+.dial-foot {
+  padding: 6px 11px;
+  background: rgba(212,165,116,0.05);
+  border-top: 1px solid rgba(212,165,116,0.08);
+  font-size:9px; color:var(--warm); font-weight:300; letter-spacing:0.1em;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   SLIDE 7 — АВТОЗАПИСЬ
+   ========================================== */
+.s-autobook { align-items:center; justify-content:center; text-align:center; }
+.ab-eyebrow { font-size:var(--label-size); letter-spacing:0.3em; text-transform:uppercase; color:var(--warm); font-weight:300; margin-bottom:var(--gap); }
+.ab-title { font-family:var(--font-d); font-size:var(--h2-size); font-weight:500; color:var(--text); margin-bottom:var(--gap); }
+.ab-title em { font-style:italic; color:var(--warm); }
+
+.ab-flow {
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(0.6rem,2vw,2rem);
+  flex-wrap: nowrap;
+  margin: var(--gap) 0;
+}
+.ab-step {
+  display: flex; flex-direction: column; align-items: center; gap: var(--el-gap);
+  text-align: center;
+}
+.ab-icon {
+  width: clamp(44px,6vw,64px); height: clamp(44px,6vw,64px);
+  border-radius: 50%;
+  border: 1px solid rgba(212,165,116,0.3);
+  background: rgba(212,165,116,0.05);
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(1.1rem,2.2vw,1.6rem);
+  flex-shrink: 0;
+}
+.ab-lbl { font-size:var(--small-size); color:var(--text-sec); font-weight:300; line-height:1.4; max-width: 100px; }
+.ab-arr { font-size:clamp(1rem,2vw,1.5rem); color:var(--warm); opacity:0.45; flex-shrink:0; }
+.ab-sub { font-family:var(--font-d); font-size:clamp(0.85rem,1.8vw,1.4rem); font-style:italic; color:var(--gold); font-weight:300; }
+
+/* ==========================================
+   SLIDE 8 — НАПОМИНАНИЯ
+   ========================================== */
+.s-remind { align-items:center; justify-content:center; }
+.remind-wrap { position:relative; z-index:2; max-width:min(80vw,760px); width:100%; text-align:center; }
+.remind-title { font-family:var(--font-d); font-size:var(--h2-size); font-weight:500; color:var(--text); margin-bottom:var(--gap); }
+.remind-title em { font-style:italic; color:var(--warm); }
+
+.remind-bars {
+  display: flex; gap: clamp(1rem,3vw,3rem);
+  align-items: flex-end; justify-content: center;
+  height: clamp(120px,22vh,200px);
+  margin: var(--gap) 0;
+}
+.rbar-col { display:flex; flex-direction:column; align-items:center; gap:var(--el-gap); flex:1; max-width:160px; }
+.rbar-wrap { flex:1; width:100%; display:flex; align-items:flex-end; }
+.rbar {
+  width: 100%; border-radius:4px 4px 0 0;
+  border: 1px solid rgba(212,165,116,0.25); border-bottom:none;
+  background: linear-gradient(to top, rgba(212,165,116,0.45), rgba(212,165,116,0.12));
+}
+.rbar-time { font-family:var(--font-d); font-size:clamp(1.4rem,3.5vw,3rem); font-weight:600; color:var(--warm); line-height:1; }
+.rbar-lbl  { font-size:var(--small-size); color:var(--text-sec); font-weight:300; }
+.remind-result { font-family:var(--font-d); font-size:clamp(0.9rem,2vw,1.6rem); font-style:italic; color:var(--gold); font-weight:300; }
+
+/* ==========================================
+   SLIDE 9 — CRM КАНБАН
+   ========================================== */
+.s-crm .slide-content { justify-content:flex-start; padding-top:clamp(3.5rem,7vh,6rem); }
+.crm-title { font-family:var(--font-d); font-size:var(--h2-size); font-weight:500; color:var(--text); margin-bottom:var(--gap); }
+.crm-title em { font-style:italic; color:var(--warm); }
+
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  gap: clamp(0.4rem,0.9vw,0.8rem);
+  flex: 1;
+  max-height: calc(100vh - 9.5rem);
+  overflow: hidden;
+}
+.kb-col {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.kb-hdr {
+  padding: 7px 9px;
+  font-size: var(--small-size);
+  font-weight: 500; letter-spacing:0.1em; text-transform:uppercase;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items:center; justify-content:space-between;
+  flex-shrink: 0;
+}
+.kb-cnt {
+  width:16px; height:16px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-weight:600; color:var(--bg);
+}
+.kb-cards { padding:7px; display:flex; flex-direction:column; gap:5px; overflow:hidden; }
+.kb-card {
+  background: rgba(255,255,255,0.04);
+  border-radius:3px; padding:6px 8px;
+  font-size:9px; font-family:var(--font-b);
+  color:rgba(255,255,255,0.62); line-height:1.4;
+  border-left:2px solid;
+}
+.kb-card small { display:block; font-size:8px; color:rgba(255,255,255,0.28); margin-top:2px; }
+
+/* Column accent colors */
+.kb-col:nth-child(1) .kb-hdr { color:var(--text-sec); }
+.kb-col:nth-child(1) .kb-cnt,.kb-col:nth-child(1) .kb-card { background:rgba(255,255,255,0.04); border-left-color:var(--text-mut); }
+.kb-col:nth-child(1) .kb-cnt { background:var(--text-mut); }
+
+.kb-col:nth-child(2) .kb-hdr { color:var(--warm); }
+.kb-col:nth-child(2) .kb-cnt { background:var(--warm); }
+.kb-col:nth-child(2) .kb-card { border-left-color:var(--warm); }
+
+.kb-col:nth-child(3) .kb-hdr { color:var(--gold); }
+.kb-col:nth-child(3) .kb-cnt { background:var(--gold); }
+.kb-col:nth-child(3) .kb-card { border-left-color:var(--gold); }
+
+.kb-col:nth-child(4) .kb-hdr { color:#8fbc8b; }
+.kb-col:nth-child(4) .kb-cnt { background:#8fbc8b; }
+.kb-col:nth-child(4) .kb-card { border-left-color:#8fbc8b; }
+
+.kb-col:nth-child(5) .kb-hdr { color:var(--text-mut); }
+.kb-col:nth-child(5) .kb-cnt { background:var(--text-mut); }
+.kb-col:nth-child(5) .kb-card { border-left-color:var(--text-mut); opacity:0.65; }
+
+/* ==========================================
+   SLIDE 10 — СУФЛЁР
+   ========================================== */
+.s-prompter { align-items:center; justify-content:center; text-align:center; }
+.prompter-title { font-family:var(--font-d); font-size:var(--h2-size); font-weight:500; color:var(--text); margin-bottom:var(--gap); }
+.prompter-title em { font-style:italic; color:var(--warm); }
+
+.pflow {
+  display: flex; align-items: flex-start; justify-content:center;
+  gap: clamp(0.3rem,1.2vw,1rem);
+  flex-wrap: nowrap;
+  margin: var(--gap) 0;
+  position: relative; z-index:2;
+}
+.pf-node { display:flex; flex-direction:column; align-items:center; gap:var(--el-gap); min-width:clamp(70px,10vw,110px); }
+.pf-circle {
+  width: clamp(44px,5.5vw,58px); height:clamp(44px,5.5vw,58px);
+  border-radius:50%; border:1px solid;
+  display:flex; align-items:center; justify-content:center;
+  font-size:var(--small-size); font-weight:500; text-align:center;
+  line-height:1.25; padding:5px;
+  font-family:var(--font-b);
+}
+.pf-node:nth-child(odd)  .pf-circle { border-color:rgba(212,165,116,0.4); color:var(--warm); background:rgba(212,165,116,0.06); }
+.pf-node:nth-child(even) .pf-circle { border-color:rgba(255,255,255,0.15); color:var(--text-sec); background:rgba(255,255,255,0.03); }
+.pf-lbl { font-size:var(--small-size); color:var(--text-sec); font-weight:300; line-height:1.35; max-width:90px; }
+.pf-arr { font-size:clamp(0.9rem,1.8vw,1.3rem); color:var(--warm); opacity:0.35; align-self:center; flex-shrink:0; margin-top:calc(-1 * clamp(1rem,1.5vw,1.5rem)); }
+
+.prompter-tag {
+  font-family:var(--font-d); font-size:clamp(0.85rem,1.8vw,1.4rem);
+  font-style:italic; color:var(--text-sec); font-weight:300;
+}
+
+/* ==========================================
+   SLIDE 11 — РАССЫЛКИ + АНАЛИТИКА
+   ========================================== */
+.s-features .slide-content { justify-content:flex-start; padding-top:clamp(3.5rem,7vh,6rem); }
+.feat-title-main { font-family:var(--font-d); font-size:var(--h2-size); font-weight:500; color:var(--text); margin-bottom:var(--gap); }
+.feat-title-main em { font-style:italic; color:var(--warm); }
+
+.feat-2col {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:clamp(0.8rem,1.8vw,1.8rem);
+  flex:1; max-height:calc(100vh - 9.5rem); overflow:hidden;
+}
+.feat-section {
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:4px;
+  padding:clamp(0.8rem,1.5vw,1.4rem);
+  overflow:hidden;
+  display:flex; flex-direction:column; gap:var(--el-gap);
+}
+.feat-sec-title {
+  font-family:var(--font-d); font-size:clamp(0.95rem,1.9vw,1.5rem);
+  font-weight:500; color:var(--warm);
+  padding-bottom:var(--el-gap);
+  border-bottom:1px solid rgba(212,165,116,0.15);
+  margin-bottom:calc(var(--el-gap)*0.5);
+}
+.feat-item {
+  display:flex; align-items:flex-start; gap:8px;
+  font-size:var(--body-size); font-weight:300; color:var(--text-sec); line-height:1.5;
+}
+.feat-item::before { content:'—'; color:var(--gold); flex-shrink:0; }
+
+/* ==========================================
+   SLIDE 12 — ЦЕНА
+   ========================================== */
+.s-price { align-items:center; justify-content:center; text-align:center; }
+.s-price .blob-p1 { width:clamp(200px,38vw,460px); height:clamp(200px,38vw,460px); background:radial-gradient(circle,rgba(212,165,116,0.1) 0%,transparent 65%); top:-12%; right:-5%; }
+.s-price .blob-p2 { width:clamp(150px,28vw,340px); height:clamp(150px,28vw,340px); background:radial-gradient(circle,rgba(232,180,184,0.07) 0%,transparent 65%); bottom:-5%; left:-4%; }
+
+.price-wrap { position:relative; z-index:2; max-width:min(80vw,700px); display:flex; flex-direction:column; align-items:center; gap:var(--gap); }
+.price-old { font-size:clamp(0.8rem,1.5vw,1.1rem); color:var(--text-mut); text-decoration:line-through; text-decoration-color:rgba(180,60,40,0.55); text-decoration-thickness:1.5px; letter-spacing:0.05em; }
+.price-new { font-family:var(--font-d); font-size:clamp(3.5rem,10vw,8.5rem); font-weight:600; color:var(--warm); line-height:0.9; letter-spacing:-0.025em; }
+.price-per { font-size:var(--body-size); color:var(--text-sec); font-weight:300; letter-spacing:0.1em; }
+.price-tag { font-family:var(--font-d); font-size:clamp(0.95rem,2.2vw,1.7rem); font-style:italic; color:var(--gold); font-weight:300; }
+
+/* ==========================================
+   SLIDE 13 — SEPARATOR RED
+   ========================================== */
+.s-sep {
+  background: #b52a1a !important;
+  align-items:center; justify-content:center; text-align:center;
+}
+.s-sep::before {
+  content:'';
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(255,160,100,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 72% 50%, rgba(60,0,0,0.25) 0%, transparent 60%);
+  z-index:1;
+}
+.sep-inner { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:var(--gap); }
+.sep-eye { font-size:var(--label-size); letter-spacing:0.35em; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:300; font-family:var(--font-b); }
+.sep-title { font-family:var(--font-d); font-size:clamp(3rem,11vw,9.5rem); font-weight:600; color:#fff; line-height:0.9; letter-spacing:-0.02em; }
+.sep-sub { font-family:var(--font-d); font-size:clamp(0.9rem,2.2vw,1.8rem); font-style:italic; color:rgba(255,255,255,0.55); font-weight:300; }
+
+/* ==========================================
+   SLIDE 14 — ПРОБЛЕМА
+   ========================================== */
+.s-problem .slide-content { justify-content:flex-start; padding-top:clamp(3.5rem,7vh,6rem); }
+.prob-stat { font-family:var(--font-d); font-size:clamp(2.5rem,7vw,6rem); font-weight:600; color:var(--warm); line-height:1; letter-spacing:-0.02em; }
+.prob-stat small { font-size:0.4em; color:var(--text-sec); font-weight:300; font-style:italic; vertical-align:middle; }
+
+.prob-layers {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:clamp(0.6rem,1.3vw,1.2rem);
+  margin-top:var(--gap); overflow:hidden;
+}
+.prob-layer {
+  border:1px solid rgba(212,165,116,0.15);
+  border-radius:4px;
+  padding:clamp(0.8rem,1.5vw,1.4rem);
+  position:relative; overflow:hidden;
+}
+.prob-layer::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(to right, var(--warm), transparent); }
+.pl-n { font-family:var(--font-d); font-size:clamp(1.5rem,3vw,2.5rem); font-weight:300; color:var(--warm); opacity:0.4; line-height:1; margin-bottom:var(--el-gap); }
+.pl-title { font-size:var(--body-size); font-weight:500; color:var(--text); line-height:1.4; margin-bottom:var(--el-gap); }
+.pl-desc { font-size:var(--small-size); color:var(--text-sec); font-weight:300; line-height:1.5; }
+
+/* ==========================================
+   SLIDE 15 — МЫ ВОЗВРАЩАЕМ ДЕНЬГИ
+   ========================================== */
+.s-return { align-items:center; justify-content:center; text-align:center; }
+.s-return .blob-r1 { width:clamp(200px,38vw,460px); height:clamp(200px,38vw,460px); background:radial-gradient(circle,rgba(212,165,116,0.09) 0%,transparent 65%); top:-10%; left:-5%; }
+.s-return .blob-r2 { width:clamp(150px,28vw,340px); height:clamp(150px,28vw,340px); background:radial-gradient(circle,rgba(232,180,184,0.07) 0%,transparent 65%); bottom:-6%; right:-4%; }
+.return-wrap { position:relative; z-index:2; max-width:min(80vw,780px); display:flex; flex-direction:column; align-items:center; gap:var(--gap); }
+.return-eye { font-size:var(--label-size); letter-spacing:0.3em; text-transform:uppercase; color:var(--warm); font-weight:300; }
+.return-q { font-family:var(--font-d); font-size:clamp(1.3rem,3vw,2.6rem); font-weight:500; color:var(--text); line-height:1.35; }
+.return-q em { font-style:italic; color:var(--warm); }
+.return-tag { font-family:var(--font-d); font-size:clamp(0.9rem,2vw,1.5rem); font-style:italic; color:var(--gold); font-weight:300; }
+
 /* Edit status badge */
 #edit-status {
   position: fixed;
@@ -1162,6 +1468,358 @@ img, .image-container {
 
     </div><!-- /app-body -->
   </div><!-- /inbox-app -->
+</section>
+
+<!-- ==========================================
+     SLIDE 6 — ТРИ ДИАЛОГА
+     ========================================== -->
+<section class="slide s-3dial" id="s6">
+  <div class="blob" style="width:clamp(180px,32vw,380px);height:clamp(180px,32vw,380px);background:radial-gradient(circle,rgba(212,165,116,0.08) 0%,transparent 65%);top:-8%;right:-3%;"></div>
+  <div class="vline"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Диалоги</span>
+    <span class="slide-num">06 / 22</span>
+  </div>
+  <div class="slide-content">
+    <h2 class="sec-title reveal">Бот работает — <em>клиент доволен</em></h2>
+    <div class="three-grid">
+
+      <div class="dial-card reveal">
+        <div class="dial-hdr">
+          <span class="d-badge" style="background:#2aabee">TG</span>
+          <span class="dial-cap">Клиент спрашивает цену</span>
+        </div>
+        <div class="dial-body">
+          <div class="dm u">Привет! Сколько у вас стоит стрижка?</div>
+          <div class="dm b">Привет! Мужская от 800 ₽, женская от 1 400 ₽. Хотите записаться?</div>
+          <div class="dm u">А детская?</div>
+          <div class="dm b">Детская — 600 ₽. Есть места в эту пятницу с 10:00 😊</div>
+        </div>
+        <div class="dial-foot">Бот знает весь прайс</div>
+      </div>
+
+      <div class="dial-card reveal">
+        <div class="dial-hdr">
+          <span class="d-badge" style="background:#f50000;color:#fff">AV</span>
+          <span class="dial-cap">Клиент говорит дорого</span>
+        </div>
+        <div class="dial-body">
+          <div class="dm u">Это дорого, видел дешевле у конкурентов</div>
+          <div class="dm b">Понимаю! У нас включено: консультация мастера, уход и гарантия результата. Записать со скидкой 10% на первый визит?</div>
+          <div class="dm u">Хм, ладно, давайте</div>
+          <div class="dm b">Отлично! Когда вам удобно? 🎉</div>
+        </div>
+        <div class="dial-foot">Работает с возражениями</div>
+      </div>
+
+      <div class="dial-card reveal">
+        <div class="dial-hdr">
+          <span class="d-badge" style="background:#25d366">WA</span>
+          <span class="dial-cap">Бот записывает</span>
+        </div>
+        <div class="dial-body">
+          <div class="dm u">Хочу на маникюр в субботу</div>
+          <div class="dm b">В субботу есть 11:00 и 15:30. Какое время удобнее?</div>
+          <div class="dm u">15:30</div>
+          <div class="dm b">Готово! Записала вас на субботу в 15:30 ✅ Напомню за день</div>
+        </div>
+        <div class="dial-foot">Записал сам, без менеджера</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 7 — АВТОЗАПИСЬ
+     ========================================== -->
+<section class="slide s-autobook" id="s7">
+  <div class="blob" style="width:clamp(200px,36vw,440px);height:clamp(200px,36vw,440px);background:radial-gradient(circle,rgba(201,184,150,0.08) 0%,transparent 65%);bottom:-8%;left:-4%;"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Автозапись</span>
+    <span class="slide-num">07 / 22</span>
+  </div>
+  <div class="slide-content">
+    <p class="ab-eyebrow reveal">Без менеджера. Без таблиц.</p>
+    <h2 class="ab-title reveal">Бот записывает <em>прямо в переписке</em></h2>
+    <div class="ab-flow reveal">
+      <div class="ab-step">
+        <div class="ab-icon">💬</div>
+        <div class="ab-lbl">Клиент пишет в чат</div>
+      </div>
+      <span class="ab-arr">→</span>
+      <div class="ab-step">
+        <div class="ab-icon">🤖</div>
+        <div class="ab-lbl">Бот уточняет время</div>
+      </div>
+      <span class="ab-arr">→</span>
+      <div class="ab-step">
+        <div class="ab-icon">✅</div>
+        <div class="ab-lbl">Запись подтверждена</div>
+      </div>
+      <span class="ab-arr">→</span>
+      <div class="ab-step">
+        <div class="ab-icon" style="border-color:rgba(66,133,244,0.5);background:rgba(66,133,244,0.08)">📅</div>
+        <div class="ab-lbl">Google Calendar автоматически</div>
+      </div>
+    </div>
+    <p class="ab-sub reveal">Запись падает в календарь — вы видите её сразу</p>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 8 — НАПОМИНАНИЯ
+     ========================================== -->
+<section class="slide s-remind" id="s8">
+  <div class="blob" style="width:clamp(200px,35vw,420px);height:clamp(200px,35vw,420px);background:radial-gradient(circle,rgba(212,165,116,0.09) 0%,transparent 65%);top:-10%;right:-4%;"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Напоминания</span>
+    <span class="slide-num">08 / 22</span>
+  </div>
+  <div class="remind-wrap">
+    <h2 class="remind-title reveal">Три касания — <em>и клиент пришёл</em></h2>
+    <div class="remind-bars reveal">
+      <div class="rbar-col">
+        <div class="rbar-wrap"><div class="rbar" style="height:45%"></div></div>
+        <div class="rbar-time">24ч</div>
+        <div class="rbar-lbl">До визита</div>
+      </div>
+      <div class="rbar-col">
+        <div class="rbar-wrap"><div class="rbar" style="height:70%"></div></div>
+        <div class="rbar-time">2ч</div>
+        <div class="rbar-lbl">До визита</div>
+      </div>
+      <div class="rbar-col">
+        <div class="rbar-wrap"><div class="rbar" style="height:100%"></div></div>
+        <div class="rbar-time">30мин</div>
+        <div class="rbar-lbl">До визита</div>
+      </div>
+    </div>
+    <p class="remind-result reveal">Отмены падают. Явка растёт.</p>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 9 — CRM КАНБАН
+     ========================================== -->
+<section class="slide s-crm" id="s9">
+  <div class="blob" style="width:clamp(180px,30vw,360px);height:clamp(180px,30vw,360px);background:radial-gradient(circle,rgba(201,184,150,0.07) 0%,transparent 65%);bottom:-6%;right:-3%;"></div>
+  <div class="vline"></div>
+  <div class="slide-meta">
+    <span class="slide-label">CRM</span>
+    <span class="slide-num">09 / 22</span>
+  </div>
+  <div class="slide-content">
+    <h2 class="crm-title reveal">Все каналы — <em>одна воронка</em></h2>
+    <div class="kanban reveal">
+
+      <div class="kb-col">
+        <div class="kb-hdr">Новые<span class="kb-cnt">4</span></div>
+        <div class="kb-cards">
+          <div class="kb-card">Сергей Л.<small>Telegram · маникюр</small></div>
+          <div class="kb-card">Наталья К.<small>Авито · стрижка</small></div>
+          <div class="kb-card">Алексей М.<small>WhatsApp</small></div>
+        </div>
+      </div>
+
+      <div class="kb-col">
+        <div class="kb-hdr">В работе<span class="kb-cnt">3</span></div>
+        <div class="kb-cards">
+          <div class="kb-card">Ирина С.<small>ВКонтакте · уточняет</small></div>
+          <div class="kb-card">Пётр В.<small>Instagram · цена</small></div>
+        </div>
+      </div>
+
+      <div class="kb-col">
+        <div class="kb-hdr">Записаны<span class="kb-cnt">5</span></div>
+        <div class="kb-cards">
+          <div class="kb-card">Анна К.<small>Сб 15:30 · маникюр</small></div>
+          <div class="kb-card">Мария Т.<small>Пт 11:00 · стрижка</small></div>
+          <div class="kb-card">Диана Р.<small>Вс 13:00</small></div>
+        </div>
+      </div>
+
+      <div class="kb-col">
+        <div class="kb-hdr">Пришли<span class="kb-cnt">8</span></div>
+        <div class="kb-cards">
+          <div class="kb-card">Ольга П.<small>Завершено ✓</small></div>
+          <div class="kb-card">Светлана Ж.<small>Завершено ✓</small></div>
+          <div class="kb-card">+6 клиентов</div>
+        </div>
+      </div>
+
+      <div class="kb-col">
+        <div class="kb-hdr">Потеряны<span class="kb-cnt">2</span></div>
+        <div class="kb-cards">
+          <div class="kb-card">Игорь Д.<small>Не ответил</small></div>
+          <div class="kb-card">Вера С.<small>Отменила</small></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 10 — СУФЛЁР
+     ========================================== -->
+<section class="slide s-prompter" id="s10">
+  <div class="blob" style="width:clamp(200px,36vw,440px);height:clamp(200px,36vw,440px);background:radial-gradient(circle,rgba(212,165,116,0.08) 0%,transparent 65%);top:-8%;left:-4%;"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Суфлёр</span>
+    <span class="slide-num">10 / 22</span>
+  </div>
+  <div class="slide-content">
+    <h2 class="prompter-title reveal">Бот работает — <em>вы контролируете</em></h2>
+    <div class="pflow reveal">
+      <div class="pf-node">
+        <div class="pf-circle">Бот ведёт</div>
+        <div class="pf-lbl">Отвечает клиенту</div>
+      </div>
+      <span class="pf-arr">→</span>
+      <div class="pf-node">
+        <div class="pf-circle">Вы нажали кнопку</div>
+        <div class="pf-lbl">Хотите ответить сами</div>
+      </div>
+      <span class="pf-arr">→</span>
+      <div class="pf-node">
+        <div class="pf-circle">Бот уступил</div>
+        <div class="pf-lbl">Молча отходит</div>
+      </div>
+      <span class="pf-arr">→</span>
+      <div class="pf-node">
+        <div class="pf-circle">Вы ответили</div>
+        <div class="pf-lbl">Ваш ответ уходит</div>
+      </div>
+      <span class="pf-arr">→</span>
+      <div class="pf-node">
+        <div class="pf-circle">Бот вернулся</div>
+        <div class="pf-lbl">Продолжает диалог</div>
+      </div>
+    </div>
+    <p class="prompter-tag reveal">Клиент не заметил переключения.</p>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 11 — РАССЫЛКИ + АНАЛИТИКА
+     ========================================== -->
+<section class="slide s-features" id="s11">
+  <div class="blob" style="width:clamp(180px,30vw,360px);height:clamp(180px,30vw,360px);background:radial-gradient(circle,rgba(201,184,150,0.07) 0%,transparent 65%);top:-6%;right:-3%;"></div>
+  <div class="vline"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Инструменты</span>
+    <span class="slide-num">11 / 22</span>
+  </div>
+  <div class="slide-content">
+    <h2 class="feat-title-main reveal">Больше <em>инструментов</em></h2>
+    <div class="feat-2col">
+      <div class="feat-section reveal-left">
+        <div class="feat-sec-title">Рассылки</div>
+        <div class="feat-item">Отправка по базе клиентов</div>
+        <div class="feat-item">Персонализация по имени и истории</div>
+        <div class="feat-item">Акции, напоминания, реактивация</div>
+        <div class="feat-item">Все каналы одновременно</div>
+        <div class="feat-item">Отчёт по открытиям и ответам</div>
+      </div>
+      <div class="feat-section reveal">
+        <div class="feat-sec-title">Аналитика</div>
+        <div class="feat-item">Конверсия от диалога до записи</div>
+        <div class="feat-item">Самые частые вопросы клиентов</div>
+        <div class="feat-item">Пиковые часы обращений</div>
+        <div class="feat-item">Какой канал приносит больше</div>
+        <div class="feat-item">Динамика явки по неделям</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 12 — ЦЕНА
+     ========================================== -->
+<section class="slide s-price" id="s12">
+  <div class="blob blob-p1"></div>
+  <div class="blob blob-p2"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Стоимость</span>
+    <span class="slide-num">12 / 22</span>
+  </div>
+  <div class="price-wrap">
+    <p class="price-old reveal">менеджер + CRM + рассылки = 80 000 ₽/мес</p>
+    <div class="price-new reveal">15 000<span style="font-size:0.35em;vertical-align:middle;opacity:0.7">₽</span></div>
+    <p class="price-per reveal">в месяц · одно приложение вместо пяти</p>
+    <div class="orn reveal"><span class="orn-dot"></span></div>
+    <p class="price-tag reveal">«Окупается в момент оплаты.»</p>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 13 — SEPARATOR: МАШИНА ДЛЯ ДЕНЕГ
+     ========================================== -->
+<section class="slide s-sep" id="s13">
+  <div class="slide-meta" style="z-index:3">
+    <span class="slide-label" style="color:rgba(255,255,255,0.35)">Инвесторам</span>
+    <span class="slide-num" style="color:rgba(255,255,255,0.2)">13 / 22</span>
+  </div>
+  <div class="sep-inner">
+    <span class="sep-eye reveal">Часть II</span>
+    <h2 class="sep-title reveal">Машина<br>для денег</h2>
+    <p class="sep-sub reveal">Инвесторский питч</p>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 14 — ПРОБЛЕМА
+     ========================================== -->
+<section class="slide s-problem" id="s14">
+  <div class="blob" style="width:clamp(200px,36vw,440px);height:clamp(200px,36vw,440px);background:radial-gradient(circle,rgba(212,165,116,0.07) 0%,transparent 65%);bottom:-8%;right:-4%;"></div>
+  <div class="vline"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Проблема</span>
+    <span class="slide-num">14 / 22</span>
+  </div>
+  <div class="slide-content">
+    <div class="prob-stat reveal">6 млн <small>бизнесов в России</small></div>
+    <div class="prob-layers">
+      <div class="prob-layer reveal">
+        <div class="pl-n">01</div>
+        <div class="pl-title">Неэффективность</div>
+        <div class="pl-desc">Менеджер не успевает отвечать вовремя. Клиент уходит к конкуренту раньше, чем получил ответ.</div>
+      </div>
+      <div class="prob-layer reveal">
+        <div class="pl-n">02</div>
+        <div class="pl-title">Конкуренты быстрее</div>
+        <div class="pl-desc">Пока вы спите, конкурент с ботом уже записал клиента. Скорость ответа — новое конкурентное преимущество.</div>
+      </div>
+      <div class="prob-layer reveal">
+        <div class="pl-n">03</div>
+        <div class="pl-title">30–50 К в трубу</div>
+        <div class="pl-desc">Каждый месяц бизнес теряет от 30 до 50 000 ₽ на не отвеченных лидах и неявках из-за отсутствия автоматизации.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 15 — МЫ ВОЗВРАЩАЕМ ДЕНЬГИ
+     ========================================== -->
+<section class="slide s-return" id="s15">
+  <div class="blob blob-r1"></div>
+  <div class="blob blob-r2"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Позиционирование</span>
+    <span class="slide-num">15 / 22</span>
+  </div>
+  <div class="return-wrap">
+    <span class="return-eye reveal">Наша философия</span>
+    <div class="orn reveal"><span class="orn-dot"></span></div>
+    <p class="return-q reveal">
+      Мы не берём у клиента деньги.<br>
+      Мы <em>возвращаем его деньги.</em>
+    </p>
+    <div class="orn reveal"><span class="orn-dot"></span></div>
+    <p class="return-tag reveal">«Окупается в момент оплаты.»</p>
+  </div>
 </section>
 
 <script>
