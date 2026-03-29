@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ИСКРА — AI-менеджер</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ==========================================
+   RESET
+   ========================================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ==========================================
+   DARK BOTANICAL — THEME VARIABLES
+   Change :root vars to restyle the whole deck
+   ========================================== */
+:root {
+  --bg:       #0f0f0f;
+  --bg2:      #141414;
+  --bg3:      #1c1c1c;
+  --text:     #e8e4df;
+  --text-sec: #9a9590;
+  --text-mut: #4a4540;
+  --warm:     #d4a574;
+  --pink:     #e8b4b8;
+  --gold:     #c9b896;
+
+  --font-d: 'Cormorant', Georgia, serif;
+  --font-b: 'IBM Plex Sans', sans-serif;
+
+  /* Typography — clamp() mandatory */
+  --title-size:  clamp(2.2rem,  6vw,   5.5rem);
+  --h2-size:     clamp(1.4rem,  3.5vw, 3rem);
+  --h3-size:     clamp(1rem,    2.2vw, 2rem);
+  --body-size:   clamp(0.72rem, 1.3vw, 1rem);
+  --small-size:  clamp(0.6rem,  0.9vw, 0.75rem);
+  --label-size:  clamp(0.55rem, 0.75vw, 0.65rem);
+
+  /* Spacing */
+  --pad:      clamp(1.5rem, 4.5vw, 5rem);
+  --gap:      clamp(0.6rem,  1.8vw, 1.75rem);
+  --el-gap:   clamp(0.25rem, 0.8vw, 0.7rem);
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur:  0.7s;
+}
+
+/* ==========================================
+   VIEWPORT BASE — mandatory (from viewport-base.css)
+   ========================================== */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-b);
+}
+
+.slide-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 100%;
+  overflow: hidden;
+  padding: var(--pad);
+}
+
+/* Cards / containers */
+.card, .container, .content-box {
+  max-width: min(90vw, 1000px);
+  max-height: min(80vh, 700px);
+}
+
+/* Feature lists */
+.feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+.feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+/* Images */
+img, .image-container {
+  max-width: 100%;
+  max-height: min(50vh, 400px);
+  object-fit: contain;
+}
+
+/* Breakpoints */
+@media (max-height: 700px) {
+  :root {
+    --pad:        clamp(0.75rem, 3vw, 2rem);
+    --gap:        clamp(0.4rem, 1.5vw, 1rem);
+    --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+    --h2-size:    clamp(1rem, 3vw, 1.75rem);
+  }
+}
+@media (max-height: 600px) {
+  :root {
+    --pad:        clamp(0.5rem, 2.5vw, 1.5rem);
+    --gap:        clamp(0.3rem, 1vw, 0.75rem);
+    --title-size: clamp(1.1rem, 4vw, 2rem);
+    --body-size:  clamp(0.7rem, 1.2vw, 0.95rem);
+  }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+  :root {
+    --pad:        clamp(0.4rem, 2vw, 1rem);
+    --title-size: clamp(1rem, 3.5vw, 1.5rem);
+    --h2-size:    clamp(0.9rem, 2.5vw, 1.25rem);
+    --body-size:  clamp(0.65rem, 1vw, 0.85rem);
+  }
+}
+@media (max-width: 600px) {
+  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+  .grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.2s !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* ==========================================
+   SHARED DECORATIVE ELEMENTS
+   ========================================== */
+
+/* Atmospheric gradient blobs */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Thin vertical accent line */
+.vline {
+  position: absolute;
+  left: clamp(18px, 3vw, 40px);
+  top: 12%;
+  bottom: 12%;
+  width: 1px;
+  background: linear-gradient(to bottom,
+    transparent,
+    rgba(212,165,116,0.45) 30%,
+    rgba(201,184,150,0.35) 70%,
+    transparent
+  );
+  z-index: 1;
+}
+
+/* Slide meta bar (label top-left, number top-right) */
+.slide-meta {
+  position: absolute;
+  top: clamp(14px, 2.2vh, 28px);
+  left: var(--pad);
+  right: var(--pad);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+.slide-label {
+  font-size: var(--label-size);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--warm);
+  font-weight: 300;
+}
+.slide-num {
+  font-size: var(--label-size);
+  letter-spacing: 0.15em;
+  color: var(--text-mut);
+  font-weight: 300;
+}
+
+/* Ornamental divider */
+.orn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.orn::before, .orn::after {
+  content: '';
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.35;
+}
+.orn::before { width: clamp(24px, 4vw, 50px); }
+.orn::after  { width: clamp(12px, 2vw, 24px); }
+.orn-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--warm);
+  opacity: 0.7;
+}
+
+/* ==========================================
+   REVEAL ANIMATIONS
+   Triggered by .visible class (added via JS IntersectionObserver)
+   ========================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+
+/* Stagger delays */
+.reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal:nth-child(2) { transition-delay: 0.18s; }
+.reveal:nth-child(3) { transition-delay: 0.30s; }
+.reveal:nth-child(4) { transition-delay: 0.42s; }
+.reveal:nth-child(5) { transition-delay: 0.54s; }
+.reveal:nth-child(6) { transition-delay: 0.64s; }
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-28px);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.slide.visible .reveal-left { opacity: 1; transform: translateX(0); }
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+.slide.visible .reveal-scale { opacity: 1; transform: scale(1); }
+
+/* ==========================================
+   PROGRESS BAR
+   ========================================== */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(to right, var(--warm), var(--pink));
+  z-index: 2000;
+  transition: width 0.25s ease;
+  pointer-events: none;
+}
+
+/* ==========================================
+   NAV DOTS
+   ========================================== */
+#nav-dots {
+  position: fixed;
+  right: clamp(8px, 1.5vw, 18px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  z-index: 1500;
+}
+.ndot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--text-mut);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+.ndot.active {
+  background: var(--warm);
+  transform: scale(1.5);
+}
+
+/* ==========================================
+   INLINE EDITING
+   Hotzone top-left 80×80px, button E, Ctrl+S
+   ========================================== */
+#edit-hotzone {
+  position: fixed;
+  top: 0; left: 0;
+  width: 80px; height: 80px;
+  z-index: 9000;
+  cursor: pointer;
+}
+#edit-toggle {
+  position: fixed;
+  top: 14px; left: 14px;
+  width: 30px; height: 30px;
+  background: var(--bg3);
+  border: 1px solid var(--warm);
+  border-radius: 5px;
+  color: var(--warm);
+  font-size: 13px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 9001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#edit-toggle.show, #edit-toggle.active {
+  opacity: 1; pointer-events: auto;
+}
+#edit-toggle.active { background: var(--warm); color: var(--bg); }
+
+[contenteditable="true"] {
+  outline: 1px dashed rgba(212,165,116,0.45);
+  border-radius: 3px;
+  cursor: text;
+  min-width: 1em;
+}
+
+/* Edit status badge */
+#edit-status {
+  position: fixed;
+  bottom: 14px; left: 14px;
+  font-size: 10px;
+  font-family: var(--font-b);
+  font-weight: 300;
+  color: var(--warm);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0;
+  z-index: 9001;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+#edit-status.show { opacity: 1; }
+
+/* ==========================================
+   SLIDE 1 — TITLE / HOOK
+   1 heading + 1 subtitle + tagline (title slide limits)
+   ========================================== */
+.s-title {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Large warm blob top-right */
+.s-title .b1 {
+  width: clamp(280px, 52vw, 640px);
+  height: clamp(280px, 52vw, 640px);
+  background: radial-gradient(circle, rgba(212,165,116,0.13) 0%, transparent 65%);
+  top: -18%;
+  right: -8%;
+}
+/* Pink blob bottom-left */
+.s-title .b2 {
+  width: clamp(200px, 38vw, 480px);
+  height: clamp(200px, 38vw, 480px);
+  background: radial-gradient(circle, rgba(232,180,184,0.09) 0%, transparent 65%);
+  bottom: -5%;
+  left: -6%;
+}
+/* Gold micro blob center */
+.s-title .b3 {
+  width: clamp(80px, 18vw, 220px);
+  height: clamp(80px, 18vw, 220px);
+  background: radial-gradient(circle, rgba(201,184,150,0.07) 0%, transparent 65%);
+  top: 42%;
+  left: 28%;
+}
+
+.title-wrap {
+  position: relative;
+  z-index: 2;
+  max-width: min(82vw, 880px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--el-gap);
+}
+
+/* "ИСКРА" — large display */
+.brand {
+  font-family: var(--font-d);
+  font-size: clamp(5rem, 15vw, 13rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 0.88;
+  display: block;
+}
+.brand em {
+  font-style: italic;
+  color: var(--warm);
+}
+
+/* Hook line */
+.hook {
+  font-family: var(--font-d);
+  font-size: clamp(1rem, 2.5vw, 2rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-sec);
+  line-height: 1.5;
+  max-width: 600px;
+  margin-top: clamp(0.5rem, 1.2vh, 1.2rem);
+}
+.hook strong {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* Subtitle / tagline */
+.subtitle {
+  font-size: var(--small-size);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-mut);
+  margin-top: clamp(0.75rem, 1.8vh, 1.8rem);
+}
+
+/* Divider ornament between brand and hook */
+.title-orn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: clamp(0.6rem, 1.4vh, 1.4rem) 0;
+}
+.title-orn-line {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold));
+  opacity: 0.4;
+}
+.title-orn-line:last-child {
+  background: linear-gradient(to left, transparent, var(--gold));
+}
+.title-orn-line { width: clamp(30px, 5vw, 60px); }
+.title-orn-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--warm);
+  opacity: 0.7;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progress-bar"></div>
+
+<!-- Nav dots -->
+<nav id="nav-dots"></nav>
+
+<!-- Inline editing controls -->
+<div id="edit-hotzone"></div>
+<button id="edit-toggle" title="Режим редактирования (E)">✏</button>
+<div id="edit-status">● Редактирование</div>
+
+<!-- ==========================================
+     SLIDE 1 — TITLE / HOOK
+     ========================================== -->
+<section class="slide s-title" id="s1">
+  <!-- Atmospheric blobs -->
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+
+  <!-- Slide meta -->
+  <div class="slide-meta">
+    <span class="slide-label">ИСКРА · AI-менеджер</span>
+    <span class="slide-num">01 / 12</span>
+  </div>
+
+  <!-- Main content -->
+  <div class="title-wrap">
+    <span class="brand reveal">ИС<em>КРА</em></span>
+
+    <div class="title-orn reveal">
+      <span class="title-orn-line"></span>
+      <span class="title-orn-dot"></span>
+      <span class="title-orn-line"></span>
+    </div>
+
+    <p class="hook reveal">
+      Ваши клиенты пишут <strong>прямо сейчас.</strong><br>
+      Им никто не отвечает.
+    </p>
+
+    <p class="subtitle reveal">AI-менеджер для малого бизнеса</p>
+  </div>
+</section>
+
+<!-- More slides will be added here -->
+
+<script>
+/* ==========================================
+   SLIDE PRESENTATION CONTROLLER
+   Keyboard, touch, scroll-snap, progress, dots
+   ========================================== */
+class SlidePresentation {
+  constructor() {
+    this.slides   = Array.from(document.querySelectorAll('.slide'));
+    this.total    = this.slides.length;
+    this.current  = 0;
+    this.bar      = document.getElementById('progress-bar');
+    this.dotsNav  = document.getElementById('nav-dots');
+
+    this.buildDots();
+    this.setupObserver();
+    this.setupKeyboard();
+    this.setupTouch();
+    this.setupWheel();
+    this.setupScroll();
+  }
+
+  /* Build one dot per slide */
+  buildDots() {
+    this.slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'ndot' + (i === 0 ? ' active' : '');
+      d.title = `Слайд ${i + 1}`;
+      d.addEventListener('click', () => this.goTo(i));
+      this.dotsNav.appendChild(d);
+    });
+    this.dots = Array.from(this.dotsNav.querySelectorAll('.ndot'));
+  }
+
+  /* IntersectionObserver — adds .visible for CSS animations */
+  setupObserver() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          const i = this.slides.indexOf(e.target);
+          if (i !== -1) this.setCurrent(i);
+        }
+      });
+    }, { threshold: 0.5 });
+    this.slides.forEach(s => obs.observe(s));
+  }
+
+  setCurrent(i) {
+    this.current = i;
+    /* Progress bar */
+    this.bar.style.width = ((i + 1) / this.total * 100) + '%';
+    /* Nav dots */
+    this.dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+  }
+
+  goTo(i) {
+    i = Math.max(0, Math.min(this.total - 1, i));
+    this.slides[i].scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /* Keyboard: arrows, space, page keys */
+  setupKeyboard() {
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('edit-toggle').classList.contains('active')) return;
+      const map = {
+        ArrowDown: 1, ArrowRight: 1, ' ': 1, PageDown: 1,
+        ArrowUp: -1, ArrowLeft: -1, PageUp: -1
+      };
+      if (e.key in map) {
+        e.preventDefault();
+        this.goTo(this.current + map[e.key]);
+      }
+    });
+  }
+
+  /* Touch / swipe */
+  setupTouch() {
+    let startY = 0;
+    document.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', e => {
+      const dy = startY - e.changedTouches[0].clientY;
+      if (Math.abs(dy) > 50) this.goTo(this.current + (dy > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+
+  /* Mouse wheel (throttled) */
+  setupWheel() {
+    let t = 0;
+    document.addEventListener('wheel', e => {
+      const now = Date.now();
+      if (now - t < 800) return;
+      t = now;
+      this.goTo(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+
+  /* Scroll sync (for manual scroll) */
+  setupScroll() {
+    let t;
+    window.addEventListener('scroll', () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        const idx = Math.round(window.scrollY / window.innerHeight);
+        this.setCurrent(Math.min(idx, this.total - 1));
+      }, 50);
+    }, { passive: true });
+  }
+}
+
+/* ==========================================
+   INLINE EDITOR
+   Hotzone hover → show button, E key, Ctrl+S
+   ========================================== */
+class InlineEditor {
+  constructor() {
+    this.active    = false;
+    this.toggle    = document.getElementById('edit-toggle');
+    this.hotzone   = document.getElementById('edit-hotzone');
+    this.status    = document.getElementById('edit-status');
+    this.hideTimer = null;
+
+    this.bindHotzone();
+    this.bindKeyboard();
+    this.loadSaved();
+  }
+
+  bindHotzone() {
+    const { toggle, hotzone } = this;
+
+    hotzone.addEventListener('mouseenter', () => {
+      clearTimeout(this.hideTimer);
+      toggle.classList.add('show');
+    });
+    hotzone.addEventListener('mouseleave', () => {
+      this.hideTimer = setTimeout(() => {
+        if (!this.active) toggle.classList.remove('show');
+      }, 400);
+    });
+    toggle.addEventListener('mouseenter', () => clearTimeout(this.hideTimer));
+    toggle.addEventListener('mouseleave', () => {
+      this.hideTimer = setTimeout(() => {
+        if (!this.active) toggle.classList.remove('show');
+      }, 400);
+    });
+
+    hotzone.addEventListener('click', () => this.toggleEdit());
+    toggle.addEventListener('click', () => this.toggleEdit());
+  }
+
+  bindKeyboard() {
+    document.addEventListener('keydown', e => {
+      /* E — toggle edit mode (skip if typing in contenteditable) */
+      if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable')) {
+        this.toggleEdit();
+      }
+      /* Ctrl+S — save */
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        this.save();
+      }
+    });
+  }
+
+  toggleEdit() {
+    this.active = !this.active;
+    this.toggle.classList.toggle('active', this.active);
+    this.toggle.classList.add('show');
+    this.status.classList.toggle('show', this.active);
+
+    /* Make all text nodes editable / non-editable */
+    document.querySelectorAll(
+      '.slide h1, .slide h2, .slide h3, .slide p, .slide li, .slide span:not(.blob):not(.ndot):not(.title-orn-line):not(.title-orn-dot):not(.orn-dot)'
+    ).forEach(el => {
+      if (this.active) el.setAttribute('contenteditable', 'true');
+      else             el.removeAttribute('contenteditable');
+    });
+
+    if (!this.active) this.save();
+  }
+
+  save() {
+    /* Save current HTML to localStorage */
+    const key = 'iskra_presentation_v1';
+    const content = {};
+    document.querySelectorAll('[contenteditable]').forEach((el, i) => {
+      content[i] = el.innerHTML;
+    });
+    localStorage.setItem(key + '_content', JSON.stringify(content));
+
+    /* Export: download modified HTML */
+    const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = 'iskra.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  loadSaved() {
+    /* Restore from localStorage if available */
+    try {
+      const saved = JSON.parse(localStorage.getItem('iskra_presentation_v1_content'));
+      if (!saved) return;
+      const els = document.querySelectorAll(
+        '.slide h1, .slide h2, .slide h3, .slide p, .slide li, .slide span:not(.blob):not(.ndot):not(.title-orn-line):not(.title-orn-dot):not(.orn-dot)'
+      );
+      Object.entries(saved).forEach(([i, html]) => {
+        if (els[i]) els[i].innerHTML = html;
+      });
+    } catch (_) {}
+  }
+}
+
+/* ==========================================
+   INIT
+   ========================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  new SlidePresentation();
+  new InlineEditor();
+});
+</script>
+</body>
+</html>
