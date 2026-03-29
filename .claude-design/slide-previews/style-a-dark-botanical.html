@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview: Dark Botanical</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;1,400;1,600&family=IBM+Plex+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    background: #0f0f0f;
+}
+
+:root {
+    --bg: #0f0f0f;
+    --text: #e8e4df;
+    --text-secondary: #9a9590;
+    --warm: #d4a574;
+    --pink: #e8b4b8;
+    --gold: #c9b896;
+    --font-display: 'Cormorant', Georgia, serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+}
+
+.slide {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Abstract atmospheric blobs */
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+}
+.blob-1 {
+    width: clamp(200px, 40vw, 500px);
+    height: clamp(200px, 40vw, 500px);
+    background: radial-gradient(circle, rgba(212,165,116,0.18) 0%, transparent 70%);
+    top: -10%;
+    right: -5%;
+}
+.blob-2 {
+    width: clamp(150px, 30vw, 380px);
+    height: clamp(150px, 30vw, 380px);
+    background: radial-gradient(circle, rgba(232,180,184,0.12) 0%, transparent 70%);
+    bottom: 5%;
+    left: -5%;
+}
+.blob-3 {
+    width: clamp(100px, 20vw, 250px);
+    height: clamp(100px, 20vw, 250px);
+    background: radial-gradient(circle, rgba(201,184,150,0.10) 0%, transparent 70%);
+    top: 40%;
+    left: 30%;
+}
+
+/* Thin vertical accent line */
+.accent-line {
+    position: absolute;
+    left: clamp(24px, 4vw, 56px);
+    top: 15%;
+    bottom: 15%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--warm) 30%, var(--pink) 70%, transparent);
+    opacity: 0.5;
+}
+
+/* Label badge */
+.label {
+    position: absolute;
+    top: clamp(20px, 3vh, 36px);
+    left: clamp(24px, 4vw, 56px);
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--warm);
+    opacity: 0.8;
+}
+
+/* Slide number top right */
+.slide-num {
+    position: absolute;
+    top: clamp(20px, 3vh, 36px);
+    right: clamp(24px, 4vw, 56px);
+    font-family: var(--font-body);
+    font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+    letter-spacing: 0.15em;
+    color: var(--text-secondary);
+}
+
+.content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: min(80vw, 800px);
+    padding: clamp(1rem, 3vw, 3rem);
+}
+
+.eyebrow {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(0.6rem, 1vw, 0.8rem);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--warm);
+    margin-bottom: clamp(0.75rem, 1.5vh, 1.5rem);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: rise 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+}
+
+h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.5rem, 7vw, 6rem);
+    line-height: 1.0;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    margin-bottom: clamp(0.5rem, 1vh, 1rem);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.4s forwards;
+}
+
+h1 em {
+    font-style: italic;
+    color: var(--warm);
+}
+
+.tagline {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(0.75rem, 1.4vw, 1.05rem);
+    color: var(--text-secondary);
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+    max-width: 520px;
+    margin: 0 auto clamp(1rem, 2.5vh, 2.5rem);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: rise 0.9s cubic-bezier(0.16,1,0.3,1) 0.65s forwards;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    opacity: 0;
+    animation: rise 0.9s cubic-bezier(0.16,1,0.3,1) 0.85s forwards;
+}
+.divider-line {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold));
+}
+.divider-line:last-child {
+    background: linear-gradient(to left, transparent, var(--gold));
+}
+.divider-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--warm);
+}
+
+/* Style badge bottom */
+.style-badge {
+    position: absolute;
+    bottom: clamp(16px, 2.5vh, 28px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-body);
+    font-size: clamp(0.55rem, 0.75vw, 0.65rem);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+@keyframes rise {
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+<div class="slide">
+    <!-- Atmospheric blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- Accent line -->
+    <div class="accent-line"></div>
+
+    <!-- Labels -->
+    <div class="label">ИСКРА · AI-платформа</div>
+    <div class="slide-num">01 / 22</div>
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="eyebrow">Стиль A — Dark Botanical</div>
+        <h1>ИСКРА — <em>живой</em><br>AI-менеджер</h1>
+        <p class="tagline">Ваши клиенты пишут прямо сейчас.<br>Им никто не отвечает.</p>
+        <div class="divider">
+            <div class="divider-line"></div>
+            <div class="divider-dot"></div>
+            <div class="divider-line"></div>
+        </div>
+    </div>
+
+    <div class="style-badge">Dark Botanical · Cormorant + IBM Plex Sans</div>
+</div>
+</body>
+</html>
