@@ -331,6 +331,413 @@ img, .image-container {
   min-width: 1em;
 }
 
+/* ==========================================
+   SLIDE 2 — 4 STEPS
+   ========================================== */
+.s-steps .slide-content { justify-content: center; }
+
+.steps-title {
+  font-family: var(--font-d);
+  font-size: var(--h2-size);
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: var(--gap);
+}
+.steps-title em { font-style: italic; color: var(--warm); }
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.6rem, 1.3vw, 1.2rem);
+}
+@media (max-width: 700px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.step-card {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(201,184,150,0.1);
+  border-radius: 4px;
+  padding: clamp(0.8rem, 1.5vw, 1.4rem);
+  position: relative;
+  overflow: hidden;
+}
+.step-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--warm), transparent);
+}
+.step-n {
+  font-family: var(--font-d);
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  font-weight: 300;
+  color: rgba(212,165,116,0.22);
+  line-height: 1;
+  margin-bottom: var(--el-gap);
+}
+.step-title {
+  font-size: var(--body-size);
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: calc(var(--el-gap) * 0.7);
+}
+.step-time {
+  font-size: var(--small-size);
+  color: var(--warm);
+  font-weight: 300;
+  letter-spacing: 0.1em;
+}
+.steps-total {
+  margin-top: var(--gap);
+  text-align: right;
+  font-family: var(--font-d);
+  font-size: clamp(0.9rem, 2vw, 1.6rem);
+  font-style: italic;
+  color: var(--gold);
+  font-weight: 300;
+}
+
+/* ==========================================
+   SLIDE 3 — DNA COMPARISON
+   ========================================== */
+.s-dna .slide-content { justify-content: flex-start; padding-top: clamp(3.5rem, 7vh, 6rem); }
+
+.dna-title {
+  font-family: var(--font-d);
+  font-size: var(--h2-size);
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: var(--gap);
+}
+.dna-title em { font-style: italic; color: var(--warm); }
+
+.comp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(0.8rem, 1.8vw, 1.8rem);
+  flex: 1;
+  max-height: calc(100vh - 10rem);
+  overflow: hidden;
+}
+.comp-col {
+  border-radius: 4px;
+  padding: clamp(0.8rem, 1.5vw, 1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--el-gap);
+  overflow: hidden;
+}
+.comp-col.bad {
+  background: rgba(255,255,255,0.018);
+  border: 1px solid rgba(255,255,255,0.05);
+  opacity: 0.5;
+}
+.comp-col.good {
+  background: rgba(212,165,116,0.06);
+  border: 1px solid rgba(212,165,116,0.18);
+}
+.comp-head {
+  font-size: var(--small-size);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding-bottom: var(--el-gap);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: calc(var(--el-gap) * 0.5);
+}
+.comp-col.bad  .comp-head { color: var(--text-mut); }
+.comp-col.good .comp-head { color: var(--warm); border-bottom-color: rgba(212,165,116,0.18); }
+.comp-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: var(--body-size);
+  font-weight: 300;
+  line-height: 1.5;
+}
+.comp-col.bad  .comp-item { color: var(--text-sec); }
+.comp-col.good .comp-item { color: var(--text); }
+.ci-icon { flex-shrink: 0; opacity: 0.75; }
+
+/* ==========================================
+   SLIDE 4 — AI MANAGER / QUOTE
+   ========================================== */
+.s-ai { align-items: center; justify-content: center; text-align: center; }
+
+.s-ai .blob-ai-1 {
+  width: clamp(200px, 38vw, 460px);
+  height: clamp(200px, 38vw, 460px);
+  background: radial-gradient(circle, rgba(232,180,184,0.08) 0%, transparent 65%);
+  top: -10%; right: -6%;
+}
+.s-ai .blob-ai-2 {
+  width: clamp(150px, 28vw, 340px);
+  height: clamp(150px, 28vw, 340px);
+  background: radial-gradient(circle, rgba(212,165,116,0.07) 0%, transparent 65%);
+  bottom: -5%; left: -4%;
+}
+
+.ai-wrap {
+  position: relative;
+  z-index: 2;
+  max-width: min(78vw, 760px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap);
+}
+.ai-eyebrow {
+  font-size: var(--label-size);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--warm);
+  font-weight: 300;
+}
+.ai-bad {
+  font-family: var(--font-d);
+  font-size: clamp(0.9rem, 2vw, 1.6rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-sec);
+  text-decoration: line-through;
+  text-decoration-color: rgba(180,60,40,0.5);
+  text-decoration-thickness: 1.5px;
+}
+.ai-good {
+  font-family: var(--font-d);
+  font-size: clamp(1.4rem, 3.2vw, 2.8rem);
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.25;
+}
+.ai-good em { font-style: italic; color: var(--warm); }
+.ai-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.ai-tag {
+  padding: 4px 13px;
+  border: 1px solid rgba(201,184,150,0.2);
+  border-radius: 20px;
+  font-size: var(--small-size);
+  color: var(--gold);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+}
+
+/* ==========================================
+   SLIDE 5 — UNIFIED INBOX
+   ========================================== */
+.s-inbox { align-items: center; justify-content: center; }
+
+.inbox-cap {
+  position: absolute;
+  top: clamp(36px, 6vh, 52px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-d);
+  font-size: clamp(0.85rem, 1.6vw, 1.3rem);
+  font-weight: 400;
+  color: var(--text-sec);
+  white-space: nowrap;
+  z-index: 10;
+  letter-spacing: 0.02em;
+}
+.inbox-cap em { font-style: italic; color: var(--warm); }
+
+.inbox-app {
+  position: relative;
+  z-index: 2;
+  width: min(90vw, 940px);
+  height: min(68vh, 490px);
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,165,116,0.1);
+  margin-top: clamp(2.5rem, 5.5vh, 4.5rem);
+}
+
+.app-bar {
+  height: 30px;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+.app-dot { width: 10px; height: 10px; border-radius: 50%; }
+.app-dot:nth-child(1) { background: #ff5f57; }
+.app-dot:nth-child(2) { background: #febc2e; }
+.app-dot:nth-child(3) { background: #28c840; }
+.app-bar-name {
+  margin-left: auto;
+  font-size: 10px;
+  color: rgba(255,255,255,0.18);
+  font-family: var(--font-b);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.app-tabs {
+  display: flex;
+  background: #0d0d0d;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 0 8px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.app-tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 10px;
+  font-size: 10px;
+  font-family: var(--font-b);
+  color: rgba(255,255,255,0.3);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  cursor: default;
+}
+.app-tab.on { color: rgba(255,255,255,0.88); border-bottom-color: var(--warm); }
+.tab-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+.app-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  overflow: hidden;
+}
+
+.cl-list {
+  border-right: 1px solid rgba(255,255,255,0.05);
+  background: #0d0d0d;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.cl-list-hdr {
+  padding: 7px 11px;
+  font-size: 9px;
+  font-family: var(--font-b);
+  color: rgba(255,255,255,0.18);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  flex-shrink: 0;
+}
+.cl-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  flex-shrink: 0;
+}
+.cl-item.on { background: rgba(212,165,116,0.07); }
+.cl-av {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  font-family: var(--font-b);
+}
+.cl-info { flex: 1; min-width: 0; }
+.cl-name {
+  font-size: 10.5px; font-family: var(--font-b); font-weight: 500;
+  color: rgba(255,255,255,0.82);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cl-prev {
+  font-size: 9px; font-family: var(--font-b);
+  color: rgba(255,255,255,0.25);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px;
+}
+.cl-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+.ch-badge {
+  font-size: 7.5px; font-family: var(--font-b); font-weight: 600;
+  padding: 1.5px 5px; border-radius: 3px; color: #000; letter-spacing: 0.04em;
+}
+.cl-time { font-size: 8px; color: rgba(255,255,255,0.18); font-family: var(--font-b); }
+
+.chat-panel { display: flex; flex-direction: column; overflow: hidden; }
+.chat-hdr {
+  padding: 7px 13px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0; background: #0d0d0d;
+}
+.chat-hdr-av {
+  width: 26px; height: 26px; border-radius: 50%; background: #2aabee;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: #fff; font-family: var(--font-b); font-weight: 500;
+}
+.chat-hdr-name { font-size: 10.5px; font-family: var(--font-b); font-weight: 500; color: rgba(255,255,255,0.82); }
+.chat-hdr-ch   { font-size: 8.5px; color: var(--warm); font-family: var(--font-b); margin-left: auto; }
+
+.chat-msgs {
+  flex: 1; padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 7px;
+  overflow-y: auto; background: #0f0f0f;
+}
+.cmsg {
+  max-width: 74%; padding: 7px 10px; border-radius: 10px;
+  font-size: 10.5px; font-family: var(--font-b); line-height: 1.5;
+}
+.cmsg.u {
+  align-self: flex-end;
+  background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.78);
+  border-bottom-right-radius: 3px;
+}
+.cmsg.b {
+  align-self: flex-start;
+  background: rgba(212,165,116,0.13); color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(212,165,116,0.13); border-bottom-left-radius: 3px;
+}
+.cmsg.typing {
+  align-self: flex-start;
+  background: rgba(212,165,116,0.08); padding: 9px 14px;
+  border-bottom-left-radius: 3px;
+}
+.cmsg.typing span {
+  display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--warm); animation: tp 1.2s ease-in-out infinite;
+  margin: 0 1.5px; vertical-align: middle;
+}
+.cmsg.typing span:nth-child(2) { animation-delay: 0.2s; }
+.cmsg.typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes tp {
+  0%,80%,100% { opacity: 0.25; transform: scale(0.75); }
+  40%         { opacity: 1;    transform: scale(1.2); }
+}
+
+.chat-bottom {
+  padding: 7px 12px; border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex; gap: 6px; align-items: center;
+  background: #0d0d0d; flex-shrink: 0;
+}
+.chat-ibox {
+  flex: 1; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07); border-radius: 14px;
+  padding: 5px 12px; font-size: 10px;
+  color: rgba(255,255,255,0.28); font-family: var(--font-b); pointer-events: none;
+}
+.chat-send {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--warm); border: none; cursor: default;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--bg);
+}
+
 /* Edit status badge */
 #edit-status {
   position: fixed;
@@ -508,7 +915,254 @@ img, .image-container {
   </div>
 </section>
 
-<!-- More slides will be added here -->
+<!-- ==========================================
+     SLIDE 2 — 4 ШАГА / EASY TO USE
+     ========================================== -->
+<section class="slide s-steps" id="s2">
+  <div class="blob" style="width:clamp(220px,38vw,460px);height:clamp(220px,38vw,460px);background:radial-gradient(circle,rgba(212,165,116,0.09) 0%,transparent 65%);top:-12%;right:-4%;"></div>
+  <div class="vline"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Простой старт</span>
+    <span class="slide-num">02 / 12</span>
+  </div>
+  <div class="slide-content">
+    <h2 class="steps-title reveal">10 минут — <em>и бот работает</em></h2>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-n">01</div>
+        <div class="step-title">Регистрация</div>
+        <div class="step-time">1 минута</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-n">02</div>
+        <div class="step-title">Загрузил прайс</div>
+        <div class="step-time">2 минуты</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-n">03</div>
+        <div class="step-title">Подключил канал</div>
+        <div class="step-time">3 минуты</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-n">04</div>
+        <div class="step-title">Бот работает</div>
+        <div class="step-time">уже сейчас</div>
+      </div>
+    </div>
+    <p class="steps-total reveal">Без программиста. Без недель настройки.</p>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 3 — ДНК БИЗНЕСА / COMPARISON
+     ========================================== -->
+<section class="slide s-dna" id="s3">
+  <div class="blob" style="width:clamp(200px,35vw,420px);height:clamp(200px,35vw,420px);background:radial-gradient(circle,rgba(201,184,150,0.07) 0%,transparent 65%);bottom:-8%;right:-4%;"></div>
+  <div class="vline"></div>
+  <div class="slide-meta">
+    <span class="slide-label">ДНК бизнеса</span>
+    <span class="slide-num">03 / 12</span>
+  </div>
+  <div class="slide-content">
+    <h2 class="dna-title reveal">Скинул прайс — <em>бот сразу знает всё</em></h2>
+    <div class="comp-grid">
+      <div class="comp-col bad reveal-left" style="transition-delay:0.1s">
+        <div class="comp-head">Обычный бот</div>
+        <div class="comp-item"><span class="ci-icon">✕</span>Кнопки и заскриптованные ответы</div>
+        <div class="comp-item"><span class="ci-icon">✕</span>Не знает ваш прайс</div>
+        <div class="comp-item"><span class="ci-icon">✕</span>Настройка — неделями</div>
+        <div class="comp-item"><span class="ci-icon">✕</span>Нужен программист</div>
+        <div class="comp-item"><span class="ci-icon">✕</span>Клиент чувствует робота</div>
+      </div>
+      <div class="comp-col good reveal" style="transition-delay:0.25s">
+        <div class="comp-head">ИСКРА</div>
+        <div class="comp-item"><span class="ci-icon" style="color:var(--warm)">✓</span>Живой диалог, понимает контекст</div>
+        <div class="comp-item"><span class="ci-icon" style="color:var(--warm)">✓</span>Знает цены с первой минуты</div>
+        <div class="comp-item"><span class="ci-icon" style="color:var(--warm)">✓</span>Готов за 10 минут</div>
+        <div class="comp-item"><span class="ci-icon" style="color:var(--warm)">✓</span>Без программиста</div>
+        <div class="comp-item"><span class="ci-icon" style="color:var(--warm)">✓</span>Не отличают от человека</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 4 — AI-МЕНЕДЖЕР / ДИАЛОГ
+     ========================================== -->
+<section class="slide s-ai" id="s4">
+  <div class="blob blob-ai-1"></div>
+  <div class="blob blob-ai-2"></div>
+  <div class="slide-meta">
+    <span class="slide-label">AI-менеджер</span>
+    <span class="slide-num">04 / 12</span>
+  </div>
+  <div class="ai-wrap">
+    <span class="ai-eyebrow reveal">Не кнопки — настоящий диалог</span>
+    <p class="ai-bad reveal">«Я вас не понял. Выберите пункт меню.»</p>
+    <div class="orn reveal"><span class="orn-dot"></span></div>
+    <p class="ai-good reveal">«<em>Записать вас</em><br>на субботу?»</p>
+    <div class="ai-tags reveal">
+      <span class="ai-tag">Консультирует</span>
+      <span class="ai-tag">Работает с возражениями</span>
+      <span class="ai-tag">Подводит к записи</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 5 — ЕДИНЫЙ INBOX (ГЛАВНЫЙ)
+     ========================================== -->
+<section class="slide s-inbox" id="s5">
+  <div class="blob" style="width:clamp(180px,30vw,360px);height:clamp(180px,30vw,360px);background:radial-gradient(circle,rgba(212,165,116,0.07) 0%,transparent 65%);top:-6%;right:-3%;"></div>
+  <div class="slide-meta">
+    <span class="slide-label">Единый inbox</span>
+    <span class="slide-num">05 / 12</span>
+  </div>
+  <p class="inbox-cap reveal">Все каналы в <em>одном окне</em></p>
+
+  <!-- CSS-мокап интерфейса -->
+  <div class="inbox-app reveal-scale">
+
+    <!-- macOS title bar -->
+    <div class="app-bar">
+      <div class="app-dot"></div>
+      <div class="app-dot"></div>
+      <div class="app-dot"></div>
+      <span class="app-bar-name">ИСКРА · Inbox</span>
+    </div>
+
+    <!-- Channel tabs -->
+    <div class="app-tabs">
+      <div class="app-tab on">
+        <span class="tab-dot" style="background:#2aabee"></span>Все
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#2aabee"></span>Telegram
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#25d366"></span>WhatsApp
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#f50000"></span>Авито
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#0077ff"></span>ВКонтакте
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#e1306c"></span>Instagram
+      </div>
+      <div class="app-tab">
+        <span class="tab-dot" style="background:#9b59b6"></span>MAX
+      </div>
+    </div>
+
+    <!-- Body: list + chat -->
+    <div class="app-body">
+
+      <!-- Client list -->
+      <div class="cl-list">
+        <div class="cl-list-hdr">Диалоги · 6</div>
+
+        <div class="cl-item on">
+          <div class="cl-av" style="background:#2a3a4a">АК</div>
+          <div class="cl-info">
+            <div class="cl-name">Анна К.</div>
+            <div class="cl-prev">Сколько стоит маникюр?</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#2aabee">TG</span>
+            <span class="cl-time">14:32</span>
+          </div>
+        </div>
+
+        <div class="cl-item">
+          <div class="cl-av" style="background:#1a3a2a">МС</div>
+          <div class="cl-info">
+            <div class="cl-name">Михаил С.</div>
+            <div class="cl-prev">Это дорого...</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#f50000">AV</span>
+            <span class="cl-time">14:28</span>
+          </div>
+        </div>
+
+        <div class="cl-item">
+          <div class="cl-av" style="background:#1a2a1a">ОП</div>
+          <div class="cl-info">
+            <div class="cl-name">Ольга П.</div>
+            <div class="cl-prev">Записал вас на пятницу 🎉</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#25d366">WA</span>
+            <span class="cl-time">14:21</span>
+          </div>
+        </div>
+
+        <div class="cl-item">
+          <div class="cl-av" style="background:#1a2a3a">ДВ</div>
+          <div class="cl-info">
+            <div class="cl-name">Дмитрий В.</div>
+            <div class="cl-prev">Есть в воскресенье?</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#0077ff">VK</span>
+            <span class="cl-time">14:15</span>
+          </div>
+        </div>
+
+        <div class="cl-item">
+          <div class="cl-av" style="background:#2a1a2a">ЕН</div>
+          <div class="cl-info">
+            <div class="cl-name">Елена Н.</div>
+            <div class="cl-prev">Есть скидки?</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#e1306c;color:#fff">IG</span>
+            <span class="cl-time">14:08</span>
+          </div>
+        </div>
+
+        <div class="cl-item">
+          <div class="cl-av" style="background:#2a1a3a">ИК</div>
+          <div class="cl-info">
+            <div class="cl-name">Игорь К.</div>
+            <div class="cl-prev">Привет, нужна консультация</div>
+          </div>
+          <div class="cl-meta">
+            <span class="ch-badge" style="background:#9b59b6;color:#fff">MX</span>
+            <span class="cl-time">13:55</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat panel -->
+      <div class="chat-panel">
+        <div class="chat-hdr">
+          <div class="chat-hdr-av">АК</div>
+          <div>
+            <div class="chat-hdr-name">Анна К.</div>
+          </div>
+          <span class="chat-hdr-ch">via Telegram</span>
+        </div>
+
+        <div class="chat-msgs">
+          <div class="cmsg u">Добрый день! Сколько стоит маникюр с покрытием?</div>
+          <div class="cmsg b">Добрый день, Анна! Маникюр с гель-лаком — 1 800 ₽, с дизайном от 2 200 ₽. Хотите записаться?</div>
+          <div class="cmsg u">Да, хочу в эту субботу</div>
+          <div class="cmsg b">В субботу есть 11:00 и 15:30. Какое время удобнее? 😊</div>
+          <div class="cmsg typing"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="chat-bottom">
+          <div class="chat-ibox">Бот отвечает автоматически...</div>
+          <div class="chat-send">↑</div>
+        </div>
+      </div>
+
+    </div><!-- /app-body -->
+  </div><!-- /inbox-app -->
+</section>
 
 <script>
 /* ==========================================
